@@ -50,7 +50,7 @@ def main():
   print "</tr>"
 
   #data rows
-  players._players.sort(lambda x, y: cmp(x.getLastGame().getVar(x.name, "newSkill"), y.getLastGame().getVar(y.name, "newSkill")))
+  players._players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
   for player in players._players:
     print "   <tr>",player.toTableRow()
     for stat in playerstats:
