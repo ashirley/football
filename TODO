@@ -1,0 +1,16 @@
+preserve other get params in showGameList
+
+
+
+most significant {recent, ever}
+{highest, lowest} ever score
+exclusion
+wrapper page around graph
+player page including:
+  their recent games
+  their graph
+  stats per opponent (number played/probabilities)
+distribution of skill graph
+
+
+HTMLTidy
