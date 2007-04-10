@@ -2,10 +2,10 @@
 import cgi
 import cgitb; cgitb.enable()
 
-from core import *
-
 import os
 os.environ["HOME"] = "/home/local/aks/public_html/football2/matplotlibhome"
+
+from core import *
 
 import matplotlib
 #matplotlib.use('Cairo')
@@ -58,7 +58,7 @@ def main():
 
   for user in usernames:
     userPlotData = createPlotDataForUser(plotData[user])
-    line, = plot(userPlotData[0], userPlotData[1])
+    line, = plot(userPlotData[0], userPlotData[1], label=user)
 
     color = getp(line, 'color')
 
@@ -73,19 +73,22 @@ def main():
     endX   = lastX + (lastX - firstX)
     startY, endY = polyval([trendM, trendC], [startX, endX])
     
-    plot([startX, endX], [startY, endY], color + '--')
+    plot([startX, endX], [startY, endY], color + '--', label='_nolegend_')
     
     #print "y = %sx + %s"%(trendM, trendC)
 
 
   #draw a min score and max score line if we are only drawing one persons score.
   if len(usernames) == 1:
-    gca().axvline(x=userPlotData[2], color='g')
-    gca().axvline(x=userPlotData[3], color='r')
+     pass
+     #TODO why do these cause the x axis to go to 0
+#    gca().axvline(x=userPlotData[2], color='g', label='_nolegend_')
+#    gca().axvline(x=userPlotData[3], color='r', label='_nolegend_')
   
   setp(gca(), xticklabels=[])
   setp(gca(), xticks=[])
-  gca().axhline(color='k')
+  gca().axhline(color='k', label='_nolegend_')
+  legend()
 
   import tempfile
   tmpFile = tempfile.mkstemp(".png")[1]

@@ -1,16 +1,18 @@
 preserve other get params in showGameList
 
 
-
+min/max line bug on single players graph.
 most significant {recent, ever}
 {highest, lowest} ever score
-exclusion
 wrapper page around graph
+highlight the players who have just entered a game.
 player page including:
   their recent games
   their graph
   stats per opponent (number played/probabilities)
 distribution of skill graph
+last direction moved arrow (up or down)
+exclusion
 
 
 HTMLTidy
