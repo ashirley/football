@@ -93,7 +93,7 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
     
     if gameListStart > 0:
       #o's for games future of gameListStart
-      for i in range(gameListStart, gameListStart - 100, -10):
+      for i in range(gameListStart - 10, gameListStart - 110, -10):
         if i <= 0:
           #this is as far forward as we can go.
           qsDict[gameListStartParamName] = 0
