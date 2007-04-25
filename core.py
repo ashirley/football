@@ -1,6 +1,6 @@
 import datetime
 
-def parseLadderFiles():
+def parseLadderFiles(others = []):
   def contains(list, string):
     return (string in list) or (string + "\n" in list)
 
@@ -17,7 +17,7 @@ def parseLadderFiles():
 
   ladderData = LadderData();
 
-  for line in file:
+  for line in file.readlines() + others:
     list = line.split();
     if len(list) == 5:
       if not (contains(excluded, list[0]) or contains(excluded, list[2])):

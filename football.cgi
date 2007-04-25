@@ -28,15 +28,15 @@ def main():
   # remove speculative games link
   if len(speculativeGames) > 0:
     qs = cgi.parse_qs(os.environ["QUERY_STRING"])
-    del qs['oldSpeculativeGames']
-    del qs['redplayer']
-    del qs['blueplayer']
-    del qs['redscore']
-    del qs['bluescore']
+    removeKey(qs, 'oldSpeculativeGames')
+    removeKey(qs, 'redplayer')
+    removeKey(qs, 'blueplayer')
+    removeKey(qs, 'redscore')
+    removeKey(qs, 'bluescore')
     
     print "<a href='?%s'>remove Speculative Games</a>" % urllib.urlencode(qs)
 
-  ladderData = parseLadderFiles()
+  ladderData = parseLadderFiles(speculativeGames)
 
   #mark all of the speculative games as such
   if len(speculativeGames) > 0:
@@ -139,5 +139,8 @@ def main():
 """ % ",".join(speculativeGames)
 
   printHTMLFooter()
+
+def removeKey(dict, key):
+  if key in dict: del dict[key]
 
 main()

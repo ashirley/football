@@ -1,7 +1,3 @@
-fix speculative games.
-preserve other get params in showGameList
-
-
 min/max line bug on single players graph.
 most significant {recent, ever}
 {highest, lowest} ever score
