@@ -43,16 +43,16 @@ def main():
   if form.has_key("trendGameLimit"):
     trendGameLimit = int(form['trendGameLimit'].value)
 
-  games = parseLadderFiles()[0]
+  ladderData = parseLadderFiles()
 
   #dict of username -> [(time, skill)]
   plotData = DefaultDict([])
 
   #augment games with skill info.
   from playerstats import Skill
-  Skill(games)
+  Skill(ladderData)
 
-  for game in games:
+  for game in ladderData.games:
     plotData[game.red].append((game.time, game.getVar(game.red, "oldSkill") + game.getVar(game.red, "skillChangeTo")))
     plotData[game.blue].append((game.time, game.getVar(game.blue, "oldSkill") + game.getVar(game.blue, "skillChangeTo")))
 

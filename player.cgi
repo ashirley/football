@@ -18,8 +18,8 @@ def main():
 
   print "<H1>The Table Football Ladder for %s</H1>" % name
 
-  games, players = parseLadderFiles()
-  player = players.get(name)
+  ladderData = parseLadderFiles()
+  player = ladderData.getPlayer(name)
 
   if not player:
     print "<h1>Error</h1><p>You must supply a name parameter which matches a non-excluded person who has played a game.</p>"
@@ -29,12 +29,11 @@ def main():
 
   #setup all the objects which can give us statistics for a player
   from playerstats import Totals, Skill
-  playerstats = Totals(games), Skill(games)
+  playerstats = Totals(ladderData), Skill(ladderData)
 
   #recent games
   showGameList(player.games)
 
   printHTMLFooter()
-
 
 main()

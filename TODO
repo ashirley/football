@@ -1,3 +1,4 @@
+fix speculative games.
 preserve other get params in showGameList
 
 
@@ -13,6 +14,8 @@ player page including:
 distribution of skill graph
 last direction moved arrow (up or down)
 exclusion
+
+plot /gameNo as well as /time
 
 
 HTMLTidy

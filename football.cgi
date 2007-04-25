@@ -5,6 +5,8 @@ import cgitb; cgitb.enable()
 from core import *
 from htmlCore import *
 
+import urllib
+
 def main():
   printHTMLHeader()
   print "<H1>The Table Football Ladder</H1>"
@@ -25,20 +27,25 @@ def main():
     
   # remove speculative games link
   if len(speculativeGames) > 0:
-    #TODO keep other params
-    print "<a href='?'>remove Speculative Games</a>"
+    qs = cgi.parse_qs(os.environ["QUERY_STRING"])
+    del qs['oldSpeculativeGames']
+    del qs['redplayer']
+    del qs['blueplayer']
+    del qs['redscore']
+    del qs['bluescore']
+    
+    print "<a href='?%s'>remove Speculative Games</a>" % urllib.urlencode(qs)
 
-
-  games, players = parseLadderFiles()
+  ladderData = parseLadderFiles()
 
   #mark all of the speculative games as such
   if len(speculativeGames) > 0:
-    for game in games[-len(speculativeGames):]:
+    for game in ladderData.games[-len(speculativeGames):]:
       game.speculative=True
 
   #setup all the objects which can give us statistics for a player
   from playerstats import Totals, Skill
-  playerstats = Totals(games), Skill(games)
+  playerstats = Totals(ladderData), Skill(ladderData)
 
   #start table
   print "<table class=\"sortable\" id=\"players\">"
@@ -50,19 +57,31 @@ def main():
   print "</tr>"
 
   #data rows
-  players._players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
-  for player in players._players:
+  players = ladderData.getAllPlayers()[:]
+  players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
+  for player in players:
     print "   <tr>",player.toTableRow()
     for stat in playerstats:
         print stat.toTableRow(player)
     print "</tr>"
     
-
   print "  </table>"
-  
+
+  #significant games
+  #ladderData.games
+  #significantGames [ game for game in ladderData.games when ]
+  significantGames = []
+  games = ladderData.games[:]
+  games.reverse()
+  for game in games:
+    if (game.getVar(game.red, "skillChangeTo") > 7.5):
+      significantGames.append(game)
+
+    if len(significantGames) > 10:
+      break
 
   #recent games
-  showGameList(games)
+  showGameList(ladderData.games)
 
   #add a real game
 

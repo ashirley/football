@@ -15,26 +15,17 @@ def parseLadderFiles():
   #open the ladder:
   file=open('ladder.txt', 'r');
 
-  games = [];
-  players = Players();
+  ladderData = LadderData();
 
   for line in file:
     list = line.split();
     if len(list) == 5:
       if not (contains(excluded, list[0]) or contains(excluded, list[2])):
           game  = Game(list[0],list[2],list[1],list[3], list[4]);
-          games.append(game);
-          players.add(list[0]);
-          red = players.get(list[0])
-          red.played(game);
-          players.add(list[2]);
-          blue=players.get(list[2]);
-          blue.played(game);
-  return games, players
+          ladderData.addGame(game);
+  return ladderData
 
 class Game:
-  
-
   def __init__(self, r, b, rs, bs, time):
     self.red =  r
     self.blue = b
@@ -161,24 +152,49 @@ class Player:
 
 #####################################################################
 
-class Players:
+class LadderData:
+
   def __init__(self):
-    self._players = []
+    self._players = {} 
+    self.games = []
+    self.vars = {}
 
-  def add(self, name):
+  def addPlayer(self, name):
     #if players.contains name return
-    for player in self._players:
-      if(player.name == name):
-        return;
-    newPlayer = Player(name);
-
-    self._players.append(newPlayer);
+    if not self._players.has_key(name):
+      newPlayer = Player(name);
+      self._players[name] = newPlayer;
 
   #get player with given name
-  def get(self, name):
-    for player in self._players:
-      if(player.name == name):
-        return player;
+  def getPlayer(self, name, create=False):
+    if not self._players.has_key(name):
+      if create:
+        newPlayer = Player(name)
+        self._players[name] = newPlayer
+	return newPlayer
+      else:
+        return None
+    else:
+      return self._players[name] 
+
+  def getAllPlayers(self):
+    return self._players.values()
+
+  def addGame(self, game):
+    red = self.getPlayer(game.red, True)
+    red.played(game);
+    self.addPlayer(game.blue);
+    blue=self.getPlayer(game.blue, True);
+    blue.played(game);
+    self.games.append(game)
+  
+  def setVar(self, varName, varValue):
+    self.vars[varName] = varValue
+
+  def getVar(self, varName, default=""):
+    if not varName in self.vars.keys():
+      self.vars[varName] = default
+
+    return self.vars[varName]
 
 #####################################################################
-

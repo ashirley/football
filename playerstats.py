@@ -15,9 +15,10 @@ class Totals:
   gameCount = {}
   todayGameCount = {}
   
-  def __init__(self, games):
+  def __init__(self, ladderData):
     today = date.today()
-    for game in games:
+    for game in ladderData.games:
+      #NB. we call addToHashValue so that the hashes are initialised correctly
       #red player
       addToHashValue(self.totalFor, game.red, game.redScore)
       addToHashValue(self.totalAgainst, game.red, game.blueScore)
@@ -28,9 +29,6 @@ class Totals:
       addToHashValue(self.totalAgainst, game.blue, game.redScore)
       addToHashValue(self.gameCount, game.blue, 1)
 
-      #today?
-
-      #NB. we always call addToHashValue so that the hashes are initialised correctly
       isToday = 0
       if today == date.fromtimestamp(float(game.time)):
         isToday = 1
@@ -85,8 +83,8 @@ class Skill:
     #print "updateing Weasel for " + skillBuf.getPlayed(i) + " to " + str(self.weasel[skillBuf.getPlayed(i)]);
     #print str(self.weasel[skillBuf.getPlayed(i)]) + " += " + str(skillBuf.getOldSkill(i)) + " - " + str(skillBuf.oldAvg())
 
-  def __init__(self, games):
-    for game in games:
+  def __init__(self, ladderData):
+    for game in ladderData.games:
       initHash(self.skill, game.blue, CircularSkillBuffer(10))
       initHash(self.skill, game.red, CircularSkillBuffer(10))
     
@@ -105,6 +103,9 @@ class Skill:
       game.setVar(game.red, "newSkill", redOldSkill - skillChangeToBlue)
       game.setVar(game.blue, "newSkill", blueOldSkill + skillChangeToBlue)
 
+      if skillChangeToBlue > 7.5 or -skillChangeToBlue > 7.5:
+        ladderData.getVar("significantGames", []).append(game)
+	
       self.updateSkillAndWeasel(game.blue, blueOldSkill, skillChangeToBlue, game.red)
       self.updateSkillAndWeasel(game.red, redOldSkill, -skillChangeToBlue, game.blue)
     
