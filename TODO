@@ -1,15 +1,15 @@
+wrapper page around graph
+
+player page including:
+  stats per opponent (number played/probabilities)
+
 min/max line bug on single players graph.
 most significant {recent, ever}
 {highest, lowest} ever score
-wrapper page around graph
 highlight the players who have just entered a game.
-player page including:
-  their recent games
-  their graph
-  stats per opponent (number played/probabilities)
 distribution of skill graph
 last direction moved arrow (up or down)
-exclusion
+exclusion (exclude/unexclude a player)
 
 plot /gameNo as well as /time
 

@@ -34,6 +34,10 @@ def main():
   #recent games
   showGameList(player.games)
 
+
+  print "<h2>Graph</h2>"
+  print "<a href='graphpage.cgi?name=%s'><img src='graph.cgi?name=%s' /></a>" % (name, name)
+
   printHTMLFooter()
 
 main()

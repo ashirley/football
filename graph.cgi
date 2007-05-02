@@ -34,14 +34,14 @@ def main():
 
 
   form = cgi.FieldStorage()
-  if form.has_key("usernames"):
-    usernames = form['usernames'].value.split()
+  if form.has_key("name"):
+    usernames = form.getlist('name')
 
   if form.has_key("gameLimit"):
-    gameLimit = int(form['gameLimit'].value)
+    gameLimit = int(form.getfirst('gameLimit'))
 
   if form.has_key("trendGameLimit"):
-    trendGameLimit = int(form['trendGameLimit'].value)
+    trendGameLimit = int(form.getfirst('trendGameLimit'))
 
   ladderData = parseLadderFiles()
 
