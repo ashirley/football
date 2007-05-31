@@ -3,7 +3,7 @@ import cgi
 import cgitb; cgitb.enable()
 
 import os
-os.environ["HOME"] = "/home/local/aks/public_html/football2/matplotlibhome"
+os.environ["HOME"] = "/home/local/aks/public_html/football/matplotlibhome"
 
 from core import *
 
