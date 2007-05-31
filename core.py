@@ -131,7 +131,7 @@ class Player:
   tableHeadings = staticmethod(tableHeadings)
   
   def toTableRow(self):
-    out = "<td>"+self.name+"</td>"
+    out = "<td><a href='player.cgi?name=%s'>%s</a></td>" % (self.name, self.name)
     return out;
 
   def getLastGame(self):
