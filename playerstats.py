@@ -105,7 +105,7 @@ class Skill:
 
       if skillChangeToBlue > 7.5 or -skillChangeToBlue > 7.5:
         ladderData.getVar("significantGames", []).append(game)
-	
+
       self.updateSkillAndWeasel(game.blue, blueOldSkill, skillChangeToBlue, game.red)
       self.updateSkillAndWeasel(game.red, redOldSkill, -skillChangeToBlue, game.blue)
     
@@ -122,12 +122,24 @@ class Skill:
   def toTableRow(self, player):
     #print self.skill[player.name].lastSkill()
     #print self.weasel[player.name]
-                                      
-    return "<td>%0.3f</td><td>%0.3f</td>" % (self.skill[player.name].lastSkill(),
-                                      self.weasel[player.name])
+    
+    skillbuf = self.skill[player.name]
+
+    if skillbuf.isFull:
+      overratedVal = skillbuf.lastSkill() - skillbuf.avg()
+      overrated = "%0.3f" % (overratedVal)
+      if overratedVal > 0:
+        overratedClass = "overrated"
+      else:
+        overratedClass = "underrated"
+    else:
+      overrated = "n/a"
+      overratedClass = "NAoverrated"
+
+    return "<td>%0.3f</td><td>%0.3f</td><td class='%s'>%s</td>" % (self.skill[player.name].lastSkill(), self.weasel[player.name], overratedClass, overrated)
     
   def toTableHeader():
-    return "<th>Skill</th><th>Weasel Factor</th>"
+    return "<th>Skill</th><th>Weasel Factor</th><th>Over-rated</th>"
   toTableHeader = staticmethod(toTableHeader)
 
 

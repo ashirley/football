@@ -58,3 +58,16 @@ table td {
 .graphPageForm {
   float:left;
 }
+
+.overrated {
+  background-color: PaleGreen;
+}
+
+.underrated {
+  background-color: pink;
+}
+
+.NAoverrated {
+
+}
+
