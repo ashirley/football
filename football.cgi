@@ -78,7 +78,7 @@ def main():
     removeKey(qs, 'redscore')
     removeKey(qs, 'bluescore')
     
-    print "<p><a href='?%s'>remove Speculative Games</a></p>" % urllib.urlencode(qs)
+    print "<p><a href='?%s'>remove Speculative Games</a></p>" % urllib.urlencode(qs, True)
 
   #recent games
   showGameList(ladderData.games)
