@@ -25,17 +25,6 @@ def main():
     from time import time
     speculativeGames.append("%s %s %s %s %s" % (form['redplayer'].value, form['redscore'].value, form['blueplayer'].value, form['bluescore'].value,time()))
     
-  # remove speculative games link
-  if len(speculativeGames) > 0:
-    qs = cgi.parse_qs(os.environ["QUERY_STRING"])
-    removeKey(qs, 'oldSpeculativeGames')
-    removeKey(qs, 'redplayer')
-    removeKey(qs, 'blueplayer')
-    removeKey(qs, 'redscore')
-    removeKey(qs, 'bluescore')
-    
-    print "<a href='?%s'>remove Speculative Games</a>" % urllib.urlencode(qs)
-
   ladderData = parseLadderFiles(speculativeGames)
 
   #mark all of the speculative games as such
@@ -80,6 +69,17 @@ def main():
     if len(significantGames) > 10:
       break
 
+  # remove speculative games link
+  if len(speculativeGames) > 0:
+    qs = cgi.parse_qs(os.environ["QUERY_STRING"])
+    removeKey(qs, 'oldSpeculativeGames')
+    removeKey(qs, 'redplayer')
+    removeKey(qs, 'blueplayer')
+    removeKey(qs, 'redscore')
+    removeKey(qs, 'bluescore')
+    
+    print "<p><a href='?%s'>remove Speculative Games</a></p>" % urllib.urlencode(qs)
+
   #recent games
   showGameList(ladderData.games)
 
@@ -114,7 +114,7 @@ def main():
   #add a speculative game
 
   print """
-    <form method="GET" action="">
+    <form method="GET" action="" class="speculativeGameEntry">
       <h3>Add a Speculative game:</h3>
       <table>
         <tr>
