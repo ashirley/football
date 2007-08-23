@@ -24,13 +24,16 @@ def main():
   global gameLimit
   global trendGameLimit
 
+  ladderData = parseLadderFiles()
+
   #testing
-  usernames=["aks", "gjhw"]
+  #usernames=["aks", "gjhw"]
   #usernames=["aks"]
   #usernames=["gjhw"]
 
   gameLimit=20
   trendGameLimit=20
+  usernames=[]
 
 
   form = cgi.FieldStorage()
@@ -43,7 +46,11 @@ def main():
   if form.has_key("trendGameLimit"):
     trendGameLimit = int(form.getfirst('trendGameLimit'))
 
-  ladderData = parseLadderFiles()
+  if usernames == []:
+    usernames=[p.name for p in ladderData.getAllPlayers()]
+    gameLimit=0
+    trendGameLimit=50
+
 
   #dict of username -> [(time, skill)]
   plotData = DefaultDict([])
@@ -59,6 +66,7 @@ def main():
   for user in usernames:
     userPlotData = createPlotDataForUser(plotData[user])
     line, = plot(userPlotData[0], userPlotData[1], label=user)
+    #line, = plot(userPlotData[0][:-1], userPlotData[1][:-1], label=user)
 
     color = getp(line, 'color')
 
@@ -136,6 +144,8 @@ def createPlotDataForUser(data):
 
   trendM, trendC = polyfit(array(plotDataX[-numpoints:]), array(plotDataY[-numpoints:]), 1) # 1 means a linear result.
   return (plotDataX, plotDataY, maxSkill[0], minSkill[0], trendM, trendC)
+
+
 
 class DefaultDict(dict):
     """Dictionary with a default value for unknown keys."""

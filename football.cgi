@@ -37,6 +37,7 @@ def main():
   playerstats = Totals(ladderData), Skill(ladderData)
 
   #start table
+  print "<form action=\"graphpage.cgi\" method=\"GET\">"
   print "<table class=\"sortable\" id=\"players\">"
   
   #headers
@@ -54,7 +55,9 @@ def main():
         print stat.toTableRow(player)
     print "</tr>"
     
-  print "  </table>"
+  print "</table>"
+  print "<input type=\"submit\" value=\"Graph\" />"
+  print "</form>"
 
   #significant games
   #ladderData.games

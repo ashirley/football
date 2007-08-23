@@ -30,7 +30,7 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
   if form.has_key(gameListStartParamName):
     gameListStart = int(form[gameListStartParamName].value)
 
-  #TODO guard against daft llimits 
+  #TODO guard against daft limits 
   if gameListStart > len(games) - 10:
     gameListStart = len(games) - 10
 

@@ -1,13 +1,15 @@
+most significant {recent, ever}
+{highest, lowest} ever score
+
 wrapper page around graph
 
 player page including:
+  make the graph smaller
   stats per opponent (number played/probabilities)
 
 graph for multiple players should plot data over the same period of time not the same number of games (still specify that time as the latest point in time that everypone has played a given number of games) This might sort out the stumpy trend lines when someone isn't playing as many games as the rest.
 
 min/max line bug on single players graph.
-most significant {recent, ever}
-{highest, lowest} ever score
 highlight the players who have just entered a game.
 distribution of skill graph
 last direction moved arrow (up or down)

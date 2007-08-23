@@ -127,11 +127,11 @@ class Player:
   
 
   def tableHeadings():
-    return "<th>name</th>"
+    return "<th>Name</th><th>Show</th>"
   tableHeadings = staticmethod(tableHeadings)
   
   def toTableRow(self):
-    out = "<td><a href='player.cgi?name=%s'>%s</a></td>" % (self.name, self.name)
+    out = "<td><a href='player.cgi?name=%(name)s'>%(name)s</a></td><td><input type='checkbox' name='name' value='%(name)s'/></td>" % {"name" : self.name}
     return out;
 
   def getLastGame(self):
@@ -148,6 +148,12 @@ class Player:
       raise KeyError, "player " + self.name + " didn't play this game"
  
     self.games.append(game);
+
+  def __repr__(self):
+    return "Player(%s %d)" % (self.name, len(self.games))
+
+  def __str__(self):
+    return "Player(%s %d)" % (self.name, len(self.games))
 
 
 #####################################################################
