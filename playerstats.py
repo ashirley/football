@@ -136,10 +136,10 @@ class Skill:
       overrated = "n/a"
       overratedClass = "NAoverrated"
 
-    return "<td>%0.3f</td><td>%0.3f</td><td class='%s'>%s</td>" % (self.skill[player.name].lastSkill(), self.weasel[player.name], overratedClass, overrated)
+    return "<td>%0.3f</td><td class='%s'>%s</td><td>%0.3f</td>" % (self.weasel[player.name], overratedClass, overrated, self.skill[player.name].lastSkill())
     
   def toTableHeader():
-    return "<th>Skill</th><th>Weasel Factor</th><th>Over-rated</th>"
+    return "<th>Weasel Factor</th><th>Over-rated</th><th>Skill</th>"
   toTableHeader = staticmethod(toTableHeader)
 
 
