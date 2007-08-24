@@ -3,17 +3,20 @@ import cgi
 import urllib
 import os
 
-def printHTMLHeader():
+def printHTMLHeader(title=""):
+  if title != "":
+    title = title + " - "
+
   print "Content-Type: text/html\n\n";
   print """
 <head>
-  <title>Table Football Ladder (v2 beta)</title>
+  <title>%sTable Football Ladder (v2 beta)</title>
   <script src="js/sorttable.js"></script>
   <link rel="stylesheet" type="text/css" href="football.css" />
 </head>
                                                          
   <body>
-"""
+""" % (title)
 
 def printHTMLFooter():
   print """

@@ -64,21 +64,22 @@ class Game:
     return playerVars[varName]
 
   def tableHeadings():
-    out = "<th class='redHeader'>Red player</th>"
-    out +="<th class='redHeader'>Red Score</th>"
-    out +="<th class='blueHeader'>Blue Score</th>"
-    out +="<th class='blueHeader'>Blue Player</th>"
-    out +="<th>Skill Change</th>"
-    out +="<th>Date</th>"
+    out = """
+<th class='redHeader'>Red player</th>
+<th class='redHeader'>Red Score</th>
+<th class='blueHeader'>Blue Score</th>
+<th class='blueHeader'>Blue Player</th>
+<th>Skill Change</th>
+<th>Date</th>"""
       
     return out
   tableHeadings = staticmethod(tableHeadings)
 
   def toTableRow(self):
-    out = "<td>%s</td>" % self.red
+    out = "<td><a href='player.cgi?name=%s'>%s</a></td>" % (self.red, self.red)
     out +="<td>%d</td>" % self.redScore
     out +="<td>%d</td>" % self.blueScore
-    out +="<td>%s</td>" % self.blue
+    out +="<td><a href='player.cgi?name=%s'>%s</a></td>" % (self.blue, self.blue)
 
     skillChangeToRed = self.getVar(self.red, "skillChangeTo")
     skillChangeToBlue = self.getVar(self.blue, "skillChangeTo")

@@ -90,8 +90,8 @@ def main():
       lowestSkillTime = game.time
 
   print """<table><tr><th></th><th>Player</th><th>Skill</th><th>Date</th></tr>
-  <tr><td>Highest ever skill</td><td>%(highestPlayer)s</td><td>%(highestScore).3f</td><td>%(highestDate)s</td></tr>
-  <tr><td>Lowest ever skill</td><td>%(lowestPlayer)s</td><td>%(lowestScore).3f</td><td>%(lowestDate)s</td></tr>
+  <tr><td>Highest ever skill</td><td><a href='player.cgi?name=%(highestPlayer)s'>%(highestPlayer)s</a></td><td>%(highestScore).3f</td><td>%(highestDate)s</td></tr>
+  <tr><td>Lowest ever skill</td><td><a href='player.cgi?name=%(lowestPlayer)s'>%(lowestPlayer)s</a></td><td>%(lowestScore).3f</td><td>%(lowestDate)s</td></tr>
   </table>
   """ % {
     "highestPlayer" : highestSkillPlayer ,

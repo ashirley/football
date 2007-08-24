@@ -8,7 +8,7 @@ from core import *
 from htmlCore import *
 
 def main():
-  printHTMLHeader()
+  printHTMLHeader("Graph")
 
   qs = os.environ["QUERY_STRING"]
   qsDict = cgi.parse_qs(qs)
@@ -29,20 +29,19 @@ def main():
     print ">%s</option>" % player.name
   print "</select></div>"
 
-  #TODO javascript?
   #gameLimit
-  print "<div class='graphPageForm'><div>Number of games shown</div><input name='gameLimit'"
+  print "<div class='graphPageForm'><div>Number of games shown: <input name='gameLimit'"
   if 'gameLimit' in qsDict:
     print "value='%d'" % int(qsDict['gameLimit'][0])
   print " /></div>"
 
   #trendGameLimit
-  print "<div class='graphPageForm'><div>Number of games used for trend line</div><input name='trendGameLimit'"
+  print "<div>Number of games used for trend line: <input name='trendGameLimit'"
   if 'trendGameLimit' in qsDict:
     print "value='%d'" % int(qsDict['trendGameLimit'][0])
   print " /></div>"
 
-  print "<input type='submit' value='Update' />"
+  print "<div><input type='submit' value='Update' /></div></div>"
   print "</form>"
 
   printHTMLFooter()
