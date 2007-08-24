@@ -90,14 +90,7 @@ class Game:
     else:
         out +="<td>0</td>"
 
-    dateStr = datetime.datetime.fromtimestamp(float(self.time))
-
-    time = datetime.datetime.fromtimestamp(float(self.time))
-    if datetime.date.fromtimestamp(float(self.time)) == datetime.date.today():
-      dateStr = "%02d:%02d" % (time.hour, time.minute)
-    elif datetime.date.fromtimestamp(float(self.time)) > (datetime.date.today() - datetime.timedelta(7)):
-      dateStr = "%s %02d:%02d" % (("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")[time.weekday()], time.hour, time.minute)
-
+    dateStr = formatTime(self.time)
 
     out +="<td>%s</td>" % dateStr
     return out;
@@ -109,6 +102,15 @@ class Game:
       return "bagelGame"
     else:
       return ""
+
+  def isSignificant(self):
+    skillChangeToRed = self.getVar(self.red, "skillChangeTo")
+    skillChangeToBlue = self.getVar(self.blue, "skillChangeTo")
+
+    if skillChangeToRed == "" or skillChangeToBlue == "":
+      raise "don't know skill change, make sure you have run the Skill playerstats"
+
+    return (float(skillChangeToRed) >= 7.5 or float(skillChangeToBlue) >= 7.5)
 
   def __repr__(self):
     return "Game(%s %d:%d %s)" % (self.red, self.redScore, self.blueScore, self.blue)
@@ -204,3 +206,15 @@ class LadderData:
     return self.vars[varName]
 
 #####################################################################
+
+def formatTime(inTime):
+  time = datetime.datetime.fromtimestamp(float(inTime))
+  dateStr = time
+
+  if datetime.date.fromtimestamp(float(inTime)) == datetime.date.today():
+    dateStr = "%02d:%02d" % (time.hour, time.minute)
+  elif datetime.date.fromtimestamp(float(inTime)) > (datetime.date.today() - datetime.timedelta(7)):
+    dateStr = "%s %02d:%02d" % (("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")[time.weekday()], time.hour, time.minute)
+
+  return dateStr
+

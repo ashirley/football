@@ -50,8 +50,7 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
   gamesToList.reverse()
 
   for game in gamesToList:
-    cssClass=game.tableClass()
-    print "   <tr class='%s'>" % cssClass, game.toTableRow(), "</tr>"
+    print "   <tr class='%s'>" % game.tableClass(), game.toTableRow(), "</tr>"
   print "  </table></td>"
 
   #prev/next links
