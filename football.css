@@ -18,6 +18,22 @@ table td {
   border-color: gray gray gray gray;
 }
 
+table.structural {
+  border-style: none;
+}
+
+table.structural th {
+  border-style: none;
+}
+
+table.structural td {
+  border-style: none;
+}
+
+#devLink {
+  text-align: right;
+}
+
 .redHeader {
   background-color: pink;
 }
