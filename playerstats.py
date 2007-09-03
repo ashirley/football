@@ -15,9 +15,9 @@ class Totals:
   gameCount = {}
   todayGameCount = {}
   
-  def __init__(self, ladderData):
+  def __init__(self, games):
     today = date.today()
-    for game in ladderData.games:
+    for game in games:
       #NB. we call addToHashValue so that the hashes are initialised correctly
       #red player
       addToHashValue(self.totalFor, game.red, game.redScore)
@@ -43,8 +43,8 @@ class Totals:
         self.gameCount[player.name],
         self.todayGameCount[player.name],
         float(self.totalFor[player.name])/float(self.gameCount[player.name]),
-        float(self.totalFor[player.name])/float(self.totalAgainst[player.name]),
         float(self.totalAgainst[player.name])/float(self.gameCount[player.name]),
+        float(self.totalFor[player.name])/float(self.totalAgainst[player.name]),
       )
 
   def toTableHeader():
@@ -83,8 +83,8 @@ class Skill:
     #print "updateing Weasel for " + skillBuf.getPlayed(i) + " to " + str(self.weasel[skillBuf.getPlayed(i)]);
     #print str(self.weasel[skillBuf.getPlayed(i)]) + " += " + str(skillBuf.getOldSkill(i)) + " - " + str(skillBuf.oldAvg())
 
-  def __init__(self, ladderData):
-    for game in ladderData.games:
+  def __init__(self, games):
+    for game in games:
       initHash(self.skill, game.blue, CircularSkillBuffer(10))
       initHash(self.skill, game.red, CircularSkillBuffer(10))
     
@@ -102,9 +102,6 @@ class Skill:
       game.setVar(game.blue, "skillChangeTo", skillChangeToBlue)
       game.setVar(game.red, "newSkill", redOldSkill - skillChangeToBlue)
       game.setVar(game.blue, "newSkill", blueOldSkill + skillChangeToBlue)
-
-      if skillChangeToBlue > 7.5 or -skillChangeToBlue > 7.5:
-        ladderData.getVar("significantGames", []).append(game)
 
       self.updateSkillAndWeasel(game.blue, blueOldSkill, skillChangeToBlue, game.red)
       self.updateSkillAndWeasel(game.red, redOldSkill, -skillChangeToBlue, game.blue)

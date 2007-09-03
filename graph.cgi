@@ -57,7 +57,7 @@ def main():
 
   #augment games with skill info.
   from playerstats import Skill
-  Skill(ladderData)
+  Skill(ladderData.games)
 
   for game in ladderData.games:
     plotData[game.red].append((game.time, game.getVar(game.red, "oldSkill") + game.getVar(game.red, "skillChangeTo")))

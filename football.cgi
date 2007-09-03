@@ -34,7 +34,7 @@ def main():
 
   #setup all the objects which can give us statistics for a player
   from playerstats import Totals, Skill
-  playerstats = Totals(ladderData), Skill(ladderData)
+  playerstats = Totals(ladderData.games), Skill(ladderData.games)
 
   #start table
   print "<form action=\"graphpage.cgi\" method=\"GET\">"

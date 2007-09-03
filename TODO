@@ -9,11 +9,12 @@ graph for multiple players should plot data over the same period of time not the
 min/max line bug on single players graph.
 highlight the players who have just entered a game.
 distribution of skill graph
+directed graph of skill movements
 last direction moved arrow (up or down)
 exclusion (exclude/unexclude a player)
 
 plot /gameNo as well as /time
 
-
+refactor per player stats
 HTMLTidy
 pickle data file
