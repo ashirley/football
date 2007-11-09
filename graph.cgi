@@ -113,7 +113,7 @@ def createPlotDataForUser(data):
 
   lastSkill = 0
 
-  if len(data) >= gameLimit:
+  if len(data) > gameLimit:
     lastSkill = data[-gameLimit - 1][1]
     data = data[-gameLimit:]
 
