@@ -61,40 +61,60 @@ def main():
 
     scoreFor = game.getScoreFor(name)
     scoreAgainst = game.getScoreFor(opponent)
+    skillChangeThisGame = game.getVar(player.name, "skillChangeTo")
 
     if scoreFor > scoreAgainst:
       oppGames.setdefault('won', []).append(game)
+      if scoreAgainst == 0:
+        oppGames.setdefault('bagelWin', []).append(game)
     if scoreFor == scoreAgainst:
       oppGames.setdefault('drawn', []).append(game)
     if scoreFor < scoreAgainst:
       oppGames.setdefault('lost', []).append(game)
+      if scoreFor == 0:
+        oppGames.setdefault('bagelLoss', []).append(game)
+
+    if skillChangeThisGame > 7.5:
+      oppGames.setdefault('significantWin', []).append(game)
+    if skillChangeThisGame < -7.5:
+      oppGames.setdefault('significantLoss', []).append(game)
 
     oppGames['goalsFor'] = oppGames.get('goalsFor', 0) + scoreFor
     oppGames['goalsAgainst'] = oppGames.get('goalsAgainst', 0) + scoreAgainst
-    oppGames['skillChange'] = oppGames.get('skillChange', 0) + game.getVar(player.name, "skillChangeTo")
+    oppGames['skillChange'] = oppGames.get('skillChange', 0) + skillChangeThisGame
 
 
   opponents = list(set(redOpponents.keys() + blueOpponents.keys()))
   opponents.sort()
 
   print "<table class=\"sortable\" id=\"perPlayer\">"
-  print "<tr><th>Name</th><th>Played</th><th>Won</th><th>Drawn</th><th>Lost</th><th>Goals for</th><th>Goals against</th><th>Goal delta</th><th>Goal delta/game</th><th>Skill change</th></tr>"
+  print "<tr><th>Name</th><th>Played</th><th>10-0 Win</th><th>Significant Win</th><th>Win</th><th>Drawn</th><th>Lost</th><th>Significant Loss</th><th>10-0 Loss</th><th>Goals for</th><th>Goals against</th><th>Goal delta</th><th>Goal delta/game</th><th>Skill change</th></tr>"
   for opp in opponents:
-    won = len(redOpponents.get(opp, {}).get('won', [])) + len(blueOpponents.get(opp, {}).get('won', []))
-    drawn = len(redOpponents.get(opp, {}).get('drawn', [])) + len(blueOpponents.get(opp, {}).get('drawn', []))
-    lost = len(redOpponents.get(opp, {}).get('lost', [])) + len(blueOpponents.get(opp, {}).get('lost', []))
+    def aggregateLen (varName):
+      return len(redOpponents.get(opp, {}).get(varName, [])) + len(blueOpponents.get(opp, {}).get(varName, []))
 
-    goalsFor = redOpponents.get(opp, {}).get('goalsFor', 0) + blueOpponents.get(opp, {}).get('goalsFor', 0)
-    goalsAgainst = redOpponents.get(opp, {}).get('goalsAgainst', 0) + blueOpponents.get(opp, {}).get('goalsAgainst', 0)
+    def aggregateAdd (varName):
+      return redOpponents.get(opp, {}).get(varName, 0) + blueOpponents.get(opp, {}).get(varName, 0)
+
+    won = aggregateLen('won')
+    drawn = aggregateLen('drawn')
+    lost = aggregateLen('lost')
+
+    goalsFor = aggregateAdd('goalsFor')
+    goalsAgainst = aggregateAdd('goalsAgainst')
     
-    skillChange = redOpponents.get(opp, {}).get('skillChange', 0) + blueOpponents.get(opp, {}).get('skillChange', 0)
+    skillChange = aggregateAdd('skillChange')
 
-    print "<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%.2f</td><td>%.2f</td></tr>" % (
+    print "<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%.2f</td><td>%.2f</td></tr>" % (
     opp, 
     won + drawn + lost,
+    aggregateLen('bagelWin'),
+    aggregateLen('significantWin'),
     won,
     drawn,
     lost,
+    aggregateLen('significantLoss'),
+    aggregateLen('bagelLoss'),
     goalsFor,
     goalsAgainst,
     goalsFor-goalsAgainst,
