@@ -1,19 +1,25 @@
 wrapper page around graph
+don't assume the games are in date order in the data-file
 
 player page including:
   make the graph smaller
-  stats per opponent (number played/probabilities)
+  highest/lowest ever, most significant loss/gain
 
+move the add game box up the page.
+continue speculative games into player.cgi and graphs etc.
 graph for multiple players should plot data over the same period of time not the same number of games (still specify that time as the latest point in time that everyone has played a given number of games) This might sort out the stumpy trend lines when someone isn't playing as many games as the rest.
 
+show excluded games in grey
+
 min/max line bug on single players graph.
-highlight the players who have just entered a game.
 distribution of skill graph
 directed graph of skill movements
 last direction moved arrow (up or down)
 exclusion (exclude/unexclude a player)
 
 plot /gameNo as well as /time
+when plotting more than 1 player, plot total score as well (i.e. how is the rim teams combined score doing?)
+alternatively, show teams as pseudo players.
 
 refactor per player stats
 HTMLTidy
