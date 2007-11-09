@@ -41,6 +41,9 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
   if gameListStart > len(games) - 10:
     gameListStart = len(games) - 10
 
+  if gameListStart < 0:
+    gameListStart = 0
+
   print "<a name='%s'><h3>%s</h3><table>" %(anchorName, headerName)
   print Game.tableHeadings()
 
