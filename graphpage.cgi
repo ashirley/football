@@ -22,26 +22,31 @@ def main():
   #name
 
   preSelected = qsDict.get('name', [])
-  print "<div class='graphPageForm'><div>Players</div><select multiple='true' name='name'>"
+
+  #bollocks to css, tables just work (tm)
+
+
+  print "<table class='structural'><tr>"
+  print "<td rowspan='4'><p>Players</p><br/><select multiple='true' name='name'>"
   for player in ladderData.getAllPlayers():
     print "<option value='%s'" % player.name
     if player.name in preSelected: print "selected='true'"
     print ">%s</option>" % player.name
-  print "</select></div>"
+  print "</select></td></tr>"
 
   #gameLimit
-  print "<div class='graphPageForm'><div>Number of games shown: <input name='gameLimit'"
+  print "<tr><td>Number of games shown:</td><td><input name='gameLimit'"
   if 'gameLimit' in qsDict:
     print "value='%d'" % int(qsDict['gameLimit'][0])
-  print " /></div>"
+  print " /></td></tr>"
 
   #trendGameLimit
-  print "<div>Number of games used for trend line: <input name='trendGameLimit'"
+  print "<tr><td>Number of games used for trend line:</td><td><input name='trendGameLimit'"
   if 'trendGameLimit' in qsDict:
     print "value='%d'" % int(qsDict['trendGameLimit'][0])
-  print " /></div>"
+  print " /></td></tr>"
 
-  print "<div><input type='submit' value='Update' /></div></div>"
+  print "<tr><td><input type='submit' value='Update' /></td></tr>"
   print "</form>"
 
   printHTMLFooter()
