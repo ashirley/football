@@ -5,7 +5,6 @@ player page including:
   make the graph smaller
   highest/lowest ever, most significant loss/gain
 
-move the add game box up the page.
 continue speculative games into player.cgi and graphs etc.
 graph for multiple players should plot data over the same period of time not the same number of games (still specify that time as the latest point in time that everyone has played a given number of games) This might sort out the stumpy trend lines when someone isn't playing as many games as the rest.
 

@@ -22,7 +22,7 @@ def printHTMLFooter():
   print """
   <hr/>
   <!-- I bloody hate CSS why is this so hard? -->
-  <table class="structural" width="100%"><tr><td align="left">(c)2007 <a href="mailto:aks@decisionsoft.co.uk">Andrew Shirley</a></td><td id="devLink">Try the development branch at <a href="http://www.dsl.local/~aks/football-dev/football.cgi">http://www.dsl.local/~aks/football-dev/football.cgi</a></td></tr></table><p>
+  <table class="structural" width="100%"><tr><td align="left">&copy;2007 <a href="mailto:aks@decisionsoft.co.uk">Andrew Shirley</a></td><td id="devLink">Try the development branch at <a href="http://www.dsl.local/~aks/football-dev/football.cgi">http://www.dsl.local/~aks/football-dev/football.cgi</a></td></tr></table><p>
   <hr/>
   </body>
 </html>

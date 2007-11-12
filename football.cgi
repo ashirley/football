@@ -36,34 +36,6 @@ def main():
   from playerstats import Totals, Skill
   playerstats = Totals(ladderData.games), Skill(ladderData.games)
 
-  #start table
-  print "<form action=\"graphpage.cgi\" method=\"GET\">"
-  print "<table class=\"sortable\" id=\"players\">"
-  
-  #headers
-  print "<tr>", Player.tableHeadings()
-  for stat in playerstats:
-      print stat.toTableHeader()
-  print "</tr>"
-
-  #data rows
-  players = ladderData.getAllPlayers()[:]
-  players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
-  for player in players:
-    if player.name in form.getlist('justPlayed'):
-      print "   <tr class='justPlayed'>"
-    else:
-      print "   <tr>"
-      
-    print player.toTableRow()
-    for stat in playerstats:
-        print stat.toTableRow(player)
-    print "</tr>"
-    
-  print "</table>"
-  print "<input type=\"submit\" value=\"Graph\" />"
-  print "</form>"
-
   #highest and lowest ever skill.
   highestSkill = 0.0
   lowestSkill = 0.0
@@ -89,7 +61,7 @@ def main():
       lowestSkillPlayer = game.red
       lowestSkillTime = game.time
 
-  print """<table><tr><th></th><th>Player</th><th>Skill</th><th>Date</th></tr>
+  print """<table style='float:right;'><tr><th></th><th>Player</th><th>Skill</th><th>Date</th></tr>
   <tr><td>Highest ever skill</td><td><a href='player.cgi?name=%(highestPlayer)s'>%(highestPlayer)s</a></td><td>%(highestScore).3f</td><td>%(highestDate)s</td></tr>
   <tr><td>Lowest ever skill</td><td><a href='player.cgi?name=%(lowestPlayer)s'>%(lowestPlayer)s</a></td><td>%(lowestScore).3f</td><td>%(lowestDate)s</td></tr>
   </table>
@@ -103,6 +75,31 @@ def main():
 
   }
 
+  #main table
+  print "<form action=\"graphpage.cgi\" method=\"GET\">"
+  print "<table class=\"sortable\" id=\"players\">"
+  print "<tr>", Player.tableHeadings()
+  for stat in playerstats:
+      print stat.toTableHeader()
+  print "</tr>"
+
+  #data rows
+  players = ladderData.getAllPlayers()[:]
+  players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
+  for player in players:
+    if player.name in form.getlist('justPlayed'):
+      print "   <tr class='justPlayed'>"
+    else:
+      print "   <tr>"
+      
+    print player.toTableRow()
+    for stat in playerstats:
+        print stat.toTableRow(player)
+    print "</tr>"
+    
+  print "</table>"
+  print "<input type=\"submit\" value=\"Graph\" />"
+  print "</form>"
 
 
   # remove speculative games link
@@ -114,7 +111,37 @@ def main():
     removeKey(qs, 'redscore')
     removeKey(qs, 'bluescore')
     
-    print "<p><a href='?%s'>remove Speculative Games</a></p>" % urllib.urlencode(qs, True)
+    print "<p class='speculativeGameRemoval'><a href='?%s'>remove Speculative Games</a></p>" % urllib.urlencode(qs, True)
+
+
+  #add a real game
+  print """
+    <hr />
+    <form method="GET" action="ladderEdit.cgi">
+      <h3>Add a game:</h3>
+      <table>
+        <tr>
+          <th/>
+          <th>Name</th>
+          <th>Score</th>
+        </tr>
+        <tr>
+          <th class='redHeader'>Red Player</th>
+          <td><input type="text" name="redplayer" value=""/></td>
+          <td><input type="text" name="redscore" value=""/></td>
+        </tr>
+        <tr>
+          <th class='blueHeader'>Blue Player</th>
+          <td><input type="text" name="blueplayer" value=""/></td>
+          <td><input type="text" name="bluescore" value=""/></td>
+        </tr>
+      </table>
+      <input type="hidden" name="oldSpeculativeGames" value="%s" />
+      <input type="submit" value="Submit"/>
+    </form>
+    <hr />
+""" % ",".join(speculativeGames)
+
 
   #recent games
   showGameList(ladderData.games)
@@ -149,37 +176,10 @@ def main():
   print "</table>"
 
 
-  #add a real game
-
-  print """
-    <hr />
-    <form method="GET" action="ladderEdit.cgi">
-      <h3>Add a game:</h3>
-      <table>
-        <tr>
-          <th/>
-          <th>Name</th>
-          <th>Score</th>
-        </tr>
-        <tr>
-          <th class='redHeader'>Red Player</th>
-          <td><input type="text" name="redplayer" value=""/></td>
-          <td><input type="text" name="redscore" value=""/></td>
-        </tr>
-        <tr>
-          <th class='blueHeader'>Blue Player</th>
-          <td><input type="text" name="blueplayer" value=""/></td>
-          <td><input type="text" name="bluescore" value=""/></td>
-        </tr>
-      </table>
-      <input type="hidden" name="oldSpeculativeGames" value="%s" />
-      <input type="submit" value="Submit"/>
-    </form>
-""" % ",".join(speculativeGames)
-
   #add a speculative game
 
   print """
+    <hr />
     <form method="GET" action="" class="speculativeGameEntry">
       <h3>Add a Speculative game:</h3>
       <table>
