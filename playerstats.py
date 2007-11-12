@@ -121,9 +121,10 @@ class Skill:
     #print self.weasel[player.name]
     
     skillbuf = self.skill[player.name]
+    lastSkill = skillbuf.lastSkill()
 
     if skillbuf.isFull:
-      overratedVal = skillbuf.lastSkill() - skillbuf.avg()
+      overratedVal = lastSkill - skillbuf.avg()
       overrated = "%0.3f" % (overratedVal)
       if overratedVal > 0:
         overratedClass = "overrated"
@@ -133,7 +134,14 @@ class Skill:
       overrated = "n/a"
       overratedClass = "NAoverrated"
 
-    return "<td>%0.3f</td><td class='%s'>%s</td><td>%0.3f</td>" % (self.weasel[player.name], overratedClass, overrated, self.skill[player.name].lastSkill())
+    if skillbuf.size() < 2:
+      lastChange="n/a"
+    elif lastSkill < skillbuf.penultimateSkill():
+      lastSkillChange ="&darr;"
+    else:
+      lastSkillChange = "&uarr;"
+
+    return "<td>%0.3f</td><td class='%s'>%s</td><td>%.3f (%s)</td>" % (self.weasel[player.name], overratedClass, overrated, lastSkill, lastSkillChange)
     
   def toTableHeader():
     return "<th>Weasel Factor</th><th>Over-rated</th><th>Skill</th>"
@@ -178,7 +186,12 @@ class CircularSkillBuffer:
     return self.oldSum() / len(self.list)
 
   def lastSkill(self):
+    "The player's Skill after they have played their last game"
     return self.getSkill(len(self.list)-1)
+    
+  def penultimateSkill(self):
+    "The player's skill before they player their last game. They must have played 2 games to call this"
+    return self.getSkill(len(self.list)-2)
     
   def getPlayed(self, index):
     if len(self.list) == 0:
