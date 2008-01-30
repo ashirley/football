@@ -16,6 +16,8 @@ distribution of skill graph
 directed graph of skill movements
 exclusion (exclude/unexclude a player)
 
+hit counter in footer
+
 plot /gameNo as well as /time
 when plotting more than 1 player, plot total score as well (i.e. how is the rim teams combined score doing?)
 alternatively, show teams as pseudo players.
