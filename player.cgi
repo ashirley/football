@@ -89,6 +89,20 @@ def main():
 
   print "<table class=\"sortable\" id=\"perPlayer\">"
   print "<tr><th>Name</th><th>Played</th><th>10-0 Win</th><th>Significant Win</th><th>Win</th><th>Drawn</th><th>Lost</th><th>Significant Loss</th><th>10-0 Loss</th><th>Goals for</th><th>Goals against</th><th>Goal delta</th><th>Goal delta/game</th><th>Skill change</th></tr>"
+
+  totalPlayed = 0 
+  totalBagelWin = 0
+  totalSignificantWin = 0
+  totalWon = 0
+  totalDrawn = 0
+  totalLost = 0
+  totalSignificantLoss = 0
+  totalBagelLoss = 0
+  totalGoalsFor = 0
+  totalGoalsAgainst = 0
+  totalGoalsDifference = 0
+  totalSkillChange = 0
+
   for opp in opponents:
     def aggregateLen (varName):
       return len(redOpponents.get(opp, {}).get(varName, [])) + len(blueOpponents.get(opp, {}).get(varName, []))
@@ -105,11 +119,34 @@ def main():
     
     skillChange = aggregateAdd('skillChange')
 
+    played = won + drawn + lost
+    bagelWin = aggregateLen('bagelWin')
+    significantWin = aggregateLen('significantWin')
+    bagelLoss = aggregateLen('bagelLoss')
+    significantLoss = aggregateLen('significantLoss')
+
+    goalsDifference = goalsFor - goalsAgainst
+    goalsDifferencePerGame = float(goalsDifference)/float(played),
+
+    totalPlayed += played
+    totalBagelWin += bagelWin
+    totalSignificantWin += significantWin
+    totalWon += won
+    totalDrawn += drawn
+    totalLost += lost
+    totalSignificantLoss += significantLoss
+    totalBagelLoss += bagelLoss
+    totalGoalsFor += goalsFor
+    totalGoalsAgainst += goalsAgainst
+    totalGoalsDifference += goalsDifference
+    totalSkillChange += skillChange
+
+
     print "<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%.2f</td><td>%.2f</td></tr>" % (
     opp, 
-    won + drawn + lost,
-    aggregateLen('bagelWin'),
-    aggregateLen('significantWin'),
+    played,
+    bagelWin,
+    significantWin,
     won,
     drawn,
     lost,
@@ -117,9 +154,25 @@ def main():
     aggregateLen('bagelLoss'),
     goalsFor,
     goalsAgainst,
-    goalsFor-goalsAgainst,
+    goalsDifference,
     float(goalsFor-goalsAgainst)/float(won + drawn + lost),
     skillChange, 
+    )
+
+  print "<tr><th>Totals</th><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%.2f</td><td>%.2f</td></tr>" % (
+    totalPlayed,
+    totalBagelWin,
+    totalSignificantWin,
+    totalWon,
+    totalDrawn,
+    totalLost,
+    totalSignificantLoss,
+    totalBagelLoss,
+    totalGoalsFor,
+    totalGoalsAgainst,
+    totalGoalsDifference,
+    float(totalGoalsDifference)/float(totalPlayed),
+    totalSkillChange, 
     )
 
   print "</table>"
