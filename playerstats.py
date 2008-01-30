@@ -135,7 +135,7 @@ class Skill:
       overratedClass = "NAoverrated"
 
     if skillbuf.size() < 2:
-      lastChange="n/a"
+      lastSkillChange="n/a"
     elif lastSkill < skillbuf.penultimateSkill():
       lastSkillChange ="&darr;"
     else:
