@@ -61,7 +61,7 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
 
   for game in gamesToList:
     print "   <tr class='%s'>" % game.tableClass(), game.toTableRow(), "</tr>"
-  print "  </table></td>"
+  print "  </table>"
 
   #prev/next links
   if len(games) > 10:
