@@ -49,8 +49,10 @@ def main():
   players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
 
   justPlayedList = form.getlist('justPlayed')
+  #TODO rewrite this if!
   if len(justPlayedList) == 0:
-    justPlayedList = [form['redplayer'].value, form['blueplayer'].value]
+    if form.has_key("redplayer"):
+      justPlayedList = [form['redplayer'].value, form['blueplayer'].value]
 
   for player in players:
     if player.name in justPlayedList:
