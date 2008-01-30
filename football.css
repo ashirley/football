@@ -22,11 +22,23 @@ table.structural {
   border-style: none;
 }
 
-table.structural th {
+table.structural > tbody> tr {
   border-style: none;
 }
 
-table.structural td {
+table.structural > tbody> tr > th {
+  border-style: none;
+}
+
+table.structural > tbody> tr > td {
+  border-style: none;
+}
+
+th.structural {
+  border-style: none;
+}
+
+td.structural {
   border-style: none;
 }
 

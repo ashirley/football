@@ -36,6 +36,37 @@ def main():
   from playerstats import Totals, Skill
   playerstats = Totals(ladderData.games), Skill(ladderData.games)
 
+  #main table
+  print "<form action=\"graphpage.cgi\" method=\"GET\">"
+  print "<table class=\"sortable\" id=\"players\">"
+  print "<tr>", Player.tableHeadings()
+  for stat in playerstats:
+      print stat.toTableHeader()
+  print "</tr>"
+
+  #data rows
+  players = ladderData.getAllPlayers()[:]
+  players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
+
+  justPlayedList = form.getlist('justPlayed')
+  if len(justPlayedList) == 0:
+    justPlayedList = [form['redplayer'].value, form['blueplayer'].value]
+
+  for player in players:
+    if player.name in justPlayedList:
+      print "   <tr class='justPlayed'>"
+    else:
+      print "   <tr>"
+      
+    print player.toTableRow()
+    for stat in playerstats:
+        print stat.toTableRow(player)
+    print "</tr>"
+    
+  print "<tr><td class='structural'/><td class='structural'><input type=\"submit\" value=\"Graph\" /></td>"
+  print "</table>"
+  print "</form>"
+
   #highest and lowest ever skill.
   highestSkill = 0.0
   lowestSkill = 0.0
@@ -61,7 +92,7 @@ def main():
       lowestSkillPlayer = game.red
       lowestSkillTime = game.time
 
-  print """<table style='float:right;'><tr><th></th><th>Player</th><th>Skill</th><th>Date</th></tr>
+  print """<table><tr><th></th><th>Player</th><th>Skill</th><th>Date</th></tr>
   <tr><td>Highest ever skill</td><td><a href='player.cgi?name=%(highestPlayer)s'>%(highestPlayer)s</a></td><td>%(highestScore).3f</td><td>%(highestDate)s</td></tr>
   <tr><td>Lowest ever skill</td><td><a href='player.cgi?name=%(lowestPlayer)s'>%(lowestPlayer)s</a></td><td>%(lowestScore).3f</td><td>%(lowestDate)s</td></tr>
   </table>
@@ -74,32 +105,6 @@ def main():
     "lowestDate" : formatTime(lowestSkillTime), 
 
   }
-
-  #main table
-  print "<form action=\"graphpage.cgi\" method=\"GET\">"
-  print "<table class=\"sortable\" id=\"players\">"
-  print "<tr>", Player.tableHeadings()
-  for stat in playerstats:
-      print stat.toTableHeader()
-  print "</tr>"
-
-  #data rows
-  players = ladderData.getAllPlayers()[:]
-  players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
-  for player in players:
-    if player.name in form.getlist('justPlayed'):
-      print "   <tr class='justPlayed'>"
-    else:
-      print "   <tr>"
-      
-    print player.toTableRow()
-    for stat in playerstats:
-        print stat.toTableRow(player)
-    print "</tr>"
-    
-  print "</table>"
-  print "<input type=\"submit\" value=\"Graph\" />"
-  print "</form>"
 
 
   # remove speculative games link
@@ -114,9 +119,10 @@ def main():
     print "<p class='speculativeGameRemoval'><a href='?%s'>remove Speculative Games</a></p>" % urllib.urlencode(qs, True)
 
 
+  print "<hr /><table class='structural'>"
+
   #add a real game
-  print """
-    <hr />
+  print """<tr><td>
     <form method="GET" action="ladderEdit.cgi">
       <h3>Add a game:</h3>
       <table>
@@ -139,47 +145,8 @@ def main():
       <input type="hidden" name="oldSpeculativeGames" value="%s" />
       <input type="submit" value="Submit"/>
     </form>
-    <hr />
-""" % ",".join(speculativeGames)
-
-
-  #recent games
-  showGameList(ladderData.games)
-
-  #recent significant games
-  showGameList(
-    [game for game in ladderData.games if game.isSignificant()],
-    anchorName="RecentSignificantGames",
-    headerName="Recent Significant Games",
-    gameListStartParamName="significantGameListStart"
-  )
-
-  #most significant ever.
-
-  mostSignificantChange = 0.0
-  for game in ladderData.games:
-    
-    changeToBlue = game.getVar(game.blue, "skillChangeTo") 
-    if changeToBlue > mostSignificantChange:
-      mostSignificantChange = changeToBlue
-      mostSignificantGame = game
-
-    changeToRed = game.getVar(game.red, "skillChangeTo") 
-    if changeToRed > mostSignificantChange:
-      mostSignificantChange = changeToRed
-      mostSignificantGame = game
-
-  print "<h3>Most Significant ever</h3>"
-  print "<table>"
-  print Game.tableHeadings()
-  print "<tr class='%s'>" % mostSignificantGame.tableClass(), mostSignificantGame.toTableRow(), "</tr>"
-  print "</table>"
-
-
-  #add a speculative game
-
-  print """
-    <hr />
+    </td>
+    <td>
     <form method="GET" action="" class="speculativeGameEntry">
       <h3>Add a Speculative game:</h3>
       <table>
@@ -202,7 +169,47 @@ def main():
       <input type="hidden" name="oldSpeculativeGames" value="%s" />
       <input type="submit" value="Submit"/>
     </form>
-""" % ",".join(speculativeGames)
+    </td></tr>
+    """ % (",".join(speculativeGames), ",".join(speculativeGames))
+
+
+  #recent games
+  print "<tr><td>"
+  showGameList(ladderData.games)
+  print "</td><td>"
+
+  #recent significant games
+  showGameList(
+    [game for game in ladderData.games if game.isSignificant()],
+    anchorName="RecentSignificantGames",
+    headerName="Recent Significant Games",
+    gameListStartParamName="significantGameListStart"
+  )
+  print "</td></tr>"
+
+  print "</table>"
+
+  #most significant ever.
+
+  mostSignificantChange = 0.0
+  for game in ladderData.games:
+    
+    changeToBlue = game.getVar(game.blue, "skillChangeTo") 
+    if changeToBlue > mostSignificantChange:
+      mostSignificantChange = changeToBlue
+      mostSignificantGame = game
+
+    changeToRed = game.getVar(game.red, "skillChangeTo") 
+    if changeToRed > mostSignificantChange:
+      mostSignificantChange = changeToRed
+      mostSignificantGame = game
+
+  print "<h3>Most Significant ever</h3>"
+  print "<table>"
+  print Game.tableHeadings()
+  print "<tr class='%s'>" % mostSignificantGame.tableClass(), mostSignificantGame.toTableRow(), "</tr>"
+  print "</table>"
+
 
   printHTMLFooter()
 
