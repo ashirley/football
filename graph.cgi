@@ -31,7 +31,7 @@ def main():
   #usernames=["aks"]
   #usernames=["gjhw"]
 
-  gameLimit=20
+  gameLimit=-1
   trendGameLimit=20
   usernames=[]
 
@@ -50,6 +50,15 @@ def main():
     usernames=[p.name for p in ladderData.getAllPlayers()]
     gameLimit=0
     trendGameLimit=50
+  
+  #default to 20 games for 1 user or all games for more than one.
+  if gameLimit < 0:
+    if len(usernames) == 1:
+      gameLimit = 20
+    else:
+      gameLimit = 0
+    
+
 
 
   #dict of username -> [(time, skill)]
@@ -63,6 +72,23 @@ def main():
     plotData[game.red].append((game.time, game.getVar(game.red, "oldSkill") + game.getVar(game.red, "skillChangeTo")))
     plotData[game.blue].append((game.time, game.getVar(game.blue, "oldSkill") + game.getVar(game.blue, "skillChangeTo")))
 
+  data = {'firstX':[], 'lastX':[], 'lastY':[], 'highest':[], 'lowest':[]}
+  for user in usernames:
+    userPlotData = createPlotDataForUser(plotData[user])
+    data['firstX'].append(userPlotData[0][1])
+    data['lastX'].append(userPlotData[0][-1])
+    data['lastY'].append(userPlotData[1][-1])
+    data['highest'].append(max(userPlotData[1]))
+    data['lowest'].append(min(userPlotData[1]))
+
+  globalFirstX = min(data['firstX'])
+  globalLastX = max(data['lastX'])
+  globalLowestLastY = max(data['lastY'])
+  globalHighestLastY = max(data['lastY'])
+  globalHighestY = max(data['highest'])
+  globalLowestY = min(data['lowest'])
+
+
   for user in usernames:
     userPlotData = createPlotDataForUser(plotData[user])
     line, = plot(userPlotData[0], userPlotData[1], label=user)
@@ -75,12 +101,25 @@ def main():
     trendC = userPlotData[5]
     
     lastX  = userPlotData[0][-1]
-    firstX = userPlotData[0][1]
-
     startX = lastX
-    endX   = lastX + (lastX - firstX)
+
+    #don't go too far to the right or up and down with the trend line.
+    endX1  = lastX + (globalLastX - globalFirstX)
+
+    endY = 0
+    if trendM > 0:
+      endY = globalHighestLastY + (globalHighestY - globalLowestY) 
+    else:
+      endY = globalLowestLastY - (globalHighestY - globalLowestY) 
+
+    endX = 0
+    if trendM != 0:
+      endX2  = (endY - trendC) / trendM
+      endX   = min(endX1, endX2)
+    else:
+      endX = endX1
+
     startY, endY = polyval([trendM, trendC], [startX, endX])
-    
     plot([startX, endX], [startY, endY], color + '--', label='_nolegend_')
     
     #print "y = %sx + %s"%(trendM, trendC)
@@ -113,7 +152,7 @@ def createPlotDataForUser(data):
 
   lastSkill = 0
 
-  if len(data) > gameLimit:
+  if len(data) > gameLimit and gameLimit != 0:
     lastSkill = data[-gameLimit - 1][1]
     data = data[-gameLimit:]
 
