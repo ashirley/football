@@ -31,8 +31,6 @@ def main():
   #usernames=["aks"]
   #usernames=["gjhw"]
 
-  gameLimit=-1
-  trendGameLimit=20
   usernames=[]
 
 
@@ -40,27 +38,20 @@ def main():
   if form.has_key("name"):
     usernames = form.getlist('name')
 
+  #default to 20 games for 1 user or all games for more than one.
+  gameLimit=20
+  trendGameLimit=20
+  if usernames == []:
+    usernames=[p.name for p in ladderData.getAllPlayers()]
+    gameLimit=0
+    trendGameLimit=50
+
   if form.has_key("gameLimit"):
     gameLimit = int(form.getfirst('gameLimit'))
 
   if form.has_key("trendGameLimit"):
     trendGameLimit = int(form.getfirst('trendGameLimit'))
-
-  if usernames == []:
-    usernames=[p.name for p in ladderData.getAllPlayers()]
-    gameLimit=0
-    trendGameLimit=50
   
-  #default to 20 games for 1 user or all games for more than one.
-  if gameLimit < 0:
-    if len(usernames) == 1:
-      gameLimit = 20
-    else:
-      gameLimit = 0
-    
-
-
-
   #dict of username -> [(time, skill)]
   plotData = DefaultDict([])
 
@@ -72,35 +63,50 @@ def main():
     plotData[game.red].append((game.time, game.getVar(game.red, "oldSkill") + game.getVar(game.red, "skillChangeTo")))
     plotData[game.blue].append((game.time, game.getVar(game.blue, "oldSkill") + game.getVar(game.blue, "skillChangeTo")))
 
-  data = {'firstX':[], 'lastX':[], 'lastY':[], 'highest':[], 'lowest':[]}
+
+  plotDataPerUser = {}
+
+  data = {'firstX':[], 'lastX':[], 'lastY':[], 'highestSkill':[], 'lowestSkill':[], 'earliestGameLimit':[]}
+  if gameLimit > 0:
+    for user in usernames:
+      date = plotData[user]
+      if len(data) > gameLimit:
+        data = data[-limit:]
+  else:
+    #include all games.
+    data['earliestGameLimit'].append(0)
+    
+  #This could be sped up significantly, these max calls could be done in createPlotDataForUser to reduce the number of times we iterate over the list.
   for user in usernames:
-    userPlotData = createPlotDataForUser(plotData[user])
-    data['firstX'].append(userPlotData[0][1])
-    data['lastX'].append(userPlotData[0][-1])
-    data['lastY'].append(userPlotData[1][-1])
-    data['highest'].append(max(userPlotData[1]))
-    data['lowest'].append(min(userPlotData[1]))
+    userPlotData = createPlotDataForUser(plotData[user], gameLimit)
+    plotDataPerUser[user] = userPlotData
+
+    data['firstX'].append(userPlotData['x'][1])
+    data['lastX'].append(userPlotData['x'][-1])
+    data['lastY'].append(userPlotData['y'][-1])
+    data['highestSkill'].append(userPlotData['maxSkill'])
+    data['lowestSkill'].append(userPlotData['minSkill'])
 
   globalFirstX = min(data['firstX'])
   globalLastX = max(data['lastX'])
   globalLowestLastY = max(data['lastY'])
   globalHighestLastY = max(data['lastY'])
-  globalHighestY = max(data['highest'])
-  globalLowestY = min(data['lowest'])
+  globalHighestSkill = max(data['highestSkill'])
+  globalLowestSkill = min(data['lowestSkill'])
 
 
   for user in usernames:
-    userPlotData = createPlotDataForUser(plotData[user])
-    line, = plot(userPlotData[0], userPlotData[1], label=user)
+    userPlotData = plotDataPerUser[user]
+    line, = plot(userPlotData['x'], userPlotData['y'], label=user)
     #line, = plot(userPlotData[0][:-1], userPlotData[1][:-1], label=user)
 
     color = getp(line, 'color')
 
     #plot a trend in a dashed line
-    trendM = userPlotData[4]
-    trendC = userPlotData[5]
+    trendM = userPlotData['trendM']
+    trendC = userPlotData['trendC']
     
-    lastX  = userPlotData[0][-1]
+    lastX  = userPlotData['x'][-1]
     startX = lastX
 
     #don't go too far to the right or up and down with the trend line.
@@ -108,9 +114,9 @@ def main():
 
     endY = 0
     if trendM > 0:
-      endY = globalHighestLastY + (globalHighestY - globalLowestY) 
+      endY = globalHighestLastY + (globalHighestSkill - globalLowestSkill) 
     else:
-      endY = globalLowestLastY - (globalHighestY - globalLowestY) 
+      endY = globalLowestLastY - (globalHighestSkill - globalLowestSkill) 
 
     endX = 0
     if trendM != 0:
@@ -129,8 +135,8 @@ def main():
   if len(usernames) == 1:
      pass
      #TODO why do these cause the x axis to go to 0
-#    gca().axvline(x=userPlotData[2], color='g', label='_nolegend_')
-#    gca().axvline(x=userPlotData[3], color='r', label='_nolegend_')
+#    gca().axvline(x=userPlotData['maxSkillTime'], color='g', label='_nolegend_')
+#    gca().axvline(x=userPlotData['minSkillTime'], color='r', label='_nolegend_')
   
   setp(gca(), xticklabels=[])
   setp(gca(), xticks=[])
@@ -144,29 +150,29 @@ def main():
   print "Content-Type: image/png\n";
   shutil.copyfileobj(open(tmpFile, 'rb'), sys.stdout)
 
-def createPlotDataForUser(data):
+def createPlotDataForUser(data, limit):
   plotDataY = [] 
   plotDataX = [] 
   maxSkill = [0,0]
   minSkill = [0,0]
 
-  lastSkill = 0
+  prevSkill = 0
 
-  if len(data) > gameLimit and gameLimit != 0:
-    lastSkill = data[-gameLimit - 1][1]
-    data = data[-gameLimit:]
+  if len(data) > limit and limit != 0:
+    prevSkill = data[-limit - 1][1]
+    data = data[-limit:]
 
   for skillAtTime in data:
     newSkill = skillAtTime[1]
     time = skillAtTime[0]
 
     plotDataX.append(int(time))
-    plotDataY.append(int(lastSkill))
+    plotDataY.append(int(prevSkill))
 
     plotDataX.append(int(time))
     plotDataY.append(int(newSkill))
 
-    lastSkill=newSkill
+    prevSkill=newSkill
 
     if (newSkill > maxSkill[1]):
       maxSkill[0] = time
@@ -182,7 +188,14 @@ def createPlotDataForUser(data):
   #print len(plotDataY), trendGameLimit, numpoints, plotDataY, plotDataY[-numpoints:]
 
   trendM, trendC = polyfit(array(plotDataX[-numpoints:]), array(plotDataY[-numpoints:]), 1) # 1 means a linear result.
-  return (plotDataX, plotDataY, maxSkill[0], minSkill[0], trendM, trendC)
+  return {'x': plotDataX, 
+          'y': plotDataY, 
+          'maxSkillTime': maxSkill[0], 
+          'minSkillTime': minSkill[0],
+          'maxSkill': maxSkill[1], 
+          'minSkill': minSkill[1],
+          'trendM': trendM, 
+          'trendC': trendC}
 
 
 
