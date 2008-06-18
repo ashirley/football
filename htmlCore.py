@@ -124,3 +124,25 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
     else:
       # there is none left.
       print "Next"
+
+def showSquareTable(data):
+  """
+   Create a table with a cell for each of the items in data. This will create an NxN table where the unused cells are on the right of the bottom row.
+  """
+  from math import sqrt, ceil
+  N = int(ceil(sqrt(len(data))))
+
+  print "<table height='100%' width='100%'>\n"
+
+  for i in range(0, N):
+    print "<tr>"
+    for j in range(0, N):
+      print "<td>"
+      try:
+        print data[i*N+j]
+      except IndexError:
+        pass
+      print "</td>"
+    print "</tr>"
+  
+  print "</table>"
