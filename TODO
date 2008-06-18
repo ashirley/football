@@ -1,3 +1,8 @@
+don't have the graph button in the table as it gets sorted.
+make skill sorting work!
+don't use GET to ladderEdit.cgi
+
+
 winning/rising streak
 
 wrapper page around graph
@@ -10,6 +15,8 @@ player page including:
 
 continue speculative games into player.cgi and graphs etc.
 graph for multiple players should plot data over the same period of time not the same number of games (still specify that time as the latest point in time that everyone has played a given number of games) 
+
+show activity (fade people out of the table for inactivity?)
 
 show excluded games in grey
 
