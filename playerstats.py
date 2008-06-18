@@ -141,10 +141,10 @@ class Skill:
     else:
       lastSkillChange = "&uarr;"
 
-    return "<td>%0.3f</td><td class='%s'>%s</td><td>%.3f (%s)</td>" % (self.weasel[player.name], overratedClass, overrated, lastSkill, lastSkillChange)
+    return "<td>%0.3f</td><td class='%s'>%s</td><td>%.3f</td><td>%s</td>" % (self.weasel[player.name], overratedClass, overrated, lastSkill, lastSkillChange)
     
   def toTableHeader():
-    return "<th>Weasel Factor</th><th>Over-rated</th><th>Skill</th>"
+    return "<th>Weasel Factor</th><th>Over-rated</th><th>Skill</th><th>&Delta;</th>"
   toTableHeader = staticmethod(toTableHeader)
 
 
