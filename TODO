@@ -32,3 +32,4 @@ alternatively, show teams as pseudo players.
 refactor per player stats
 HTMLTidy
 pickle data file
+pretty error page when totalscore == 0

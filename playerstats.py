@@ -37,14 +37,17 @@ class Totals:
       addToHashValue(self.todayGameCount, game.blue, isToday)
 
   def toTableRow(self, player):
-    return "<td>%d</td><td>%d</td><td>%d(%d)</td><td>%.3f</td><td>%.3f</td><td>%.3f</td>" % (
+    forPerAgainst = "INF"
+    if float(self.totalAgainst[player.name]) != 0:
+      forPerAgainst = "%.3f" % (float(self.totalFor[player.name])/float(self.totalAgainst[player.name]))
+    return "<td>%d</td><td>%d</td><td>%d(%d)</td><td>%.3f</td><td>%.3f</td><td>%s</td>" % (
         self.totalFor[player.name],
         self.totalAgainst[player.name],
         self.gameCount[player.name],
         self.todayGameCount[player.name],
         float(self.totalFor[player.name])/float(self.gameCount[player.name]),
         float(self.totalAgainst[player.name])/float(self.gameCount[player.name]),
-        float(self.totalFor[player.name])/float(self.totalAgainst[player.name]),
+        forPerAgainst,
       )
 
   def toTableHeader():
