@@ -65,7 +65,7 @@ def main():
         print stat.toTableRow(player)
     print "</tr>"
     
-  print "<tr><td class='structural'/><td class='structural'><input type=\"submit\" value=\"Graph\" /></td>"
+  print "<tr class='sortbottom'><td class='structural'/><td class='structural'><input type=\"submit\" value=\"Graph\" /></td>"
   print "</table>"
   print "</form>"
 
