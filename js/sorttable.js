@@ -69,9 +69,10 @@ function ts_resortTable(lnk,clid) {
     sortfn = ts_sort_caseinsensitive;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
-    if (itm.match(/^[£$]/)) sortfn = ts_sort_currency;
+    if (itm.match(/^[Â£$]/)) sortfn = ts_sort_currency;
     if (itm.match(/^[\d\.]+$/)) sortfn = ts_sort_numeric;
     if (itm.match(/^[\d\.]+\(\d*\)$/)) sortfn = ts_sort_numeric;
+    if (itm = String.fromCharCode(8734)) sortfn = ts_sort_numeric;
     if (itm.match(/^[+-]?[\d]*\.[\d]*$/)) sortfn = ts_sort_numeric;
     SORT_COLUMN_INDEX = column;
     var firstRow = new Array();
@@ -146,6 +147,9 @@ function ts_sort_currency(a,b) {
 }
 
 function ts_sort_numeric(a,b) { 
+    if (ts_getInnerText(a.cells[SORT_COLUMN_INDEX]) == String.fromCharCode(8734)) return +1
+    if (ts_getInnerText(b.cells[SORT_COLUMN_INDEX]) == String.fromCharCode(8734)) return -1
+    
     aa = parseFloat(ts_getInnerText(a.cells[SORT_COLUMN_INDEX]));
     if (isNaN(aa)) aa = 0;
     bb = parseFloat(ts_getInnerText(b.cells[SORT_COLUMN_INDEX])); 
