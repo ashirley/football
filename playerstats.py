@@ -137,12 +137,15 @@ class Skill:
       overrated = "n/a"
       overratedClass = "NAoverrated"
 
-    if skillbuf.size() < 2:
+
+    streak = skillbuf.getStreak()
+
+    if streak == 0:
       lastSkillChange="n/a"
-    elif lastSkill < skillbuf.penultimateSkill():
-      lastSkillChange ="&darr;"
+    elif streak < 0:
+      lastSkillChange ="&darr;<span class=\"streak\">%d</span>" % (-1 * streak)
     else:
-      lastSkillChange = "&uarr;"
+      lastSkillChange = "&uarr;<span class=\"streak\">%d</span>" % (streak)
 
     return "<td>%0.3f</td><td class='%s'>%s</td><td>%.3f</td><td>%s</td>" % (self.weasel[player.name], overratedClass, overrated, lastSkill, lastSkillChange)
     
@@ -210,6 +213,31 @@ class CircularSkillBuffer:
     if len(self.list) == 0:
       return 0
     return self.list[index]['oldskill']
+
+  def getStreak(self):
+    """The player's skill streak.
+       This is:
+         0        if they havn't played enough games (0 or 1) or their last game didn't change their skill (unlikely!)
+         positive if they have an upwards streak
+         negative if they have a downwards streak
+    """
+    if len(self.list) < 2 or self.lastSkill() == self.penultimateSkill():
+      return 0
+    
+    op = 0
+    sign = 0
+    if self.penultimateSkill() < self.lastSkill():
+      op = lambda x, y: x < y
+      sign = +1
+    else:
+      op = lambda x, y: x > y
+      sign = -1
+
+    i = 2
+    while op(self.getSkill(len(self.list) - (i + 1)), self.getSkill(len(self.list) - i)):
+      i += 1
+
+    return sign * (i-1)
 
   def size(self):
     return len(self.list)
