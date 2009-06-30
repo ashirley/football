@@ -1,6 +1,7 @@
 #! /usr/bin/python
 import cgi
 import cgitb; cgitb.enable()
+from copy import deepcopy
 
 import os
 os.environ["HOME"] = "/home/local/aks/public_html/football/matplotlibhome"
@@ -206,7 +207,7 @@ class DefaultDict(dict):
 
     def __getitem__(self, key):
         if key in self: return self.get(key)
-        return self.setdefault(key, copy.deepcopy(self.default))
+        return self.setdefault(key, deepcopy(self.default))
     
     def __copy__(self):
         copy = DefaultDict(self.default)
