@@ -72,7 +72,7 @@ function ts_resortTable(lnk,clid) {
     if (itm.match(/^[£$]/)) sortfn = ts_sort_currency;
     if (itm.match(/^[\d\.]+$/)) sortfn = ts_sort_numeric;
     if (itm.match(/^[\d\.]+\(\d*\)$/)) sortfn = ts_sort_numeric;
-    if (itm = String.fromCharCode(8734)) sortfn = ts_sort_numeric;
+    if (itm == String.fromCharCode(8734)) sortfn = ts_sort_numeric;
     if (itm.match(/^[+-]?[\d]*\.[\d]*$/)) sortfn = ts_sort_numeric;
     SORT_COLUMN_INDEX = column;
     var firstRow = new Array();
