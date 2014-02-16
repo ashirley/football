@@ -11,9 +11,18 @@ def main():
   printHTMLHeader()
   print "<H1>The Table Football Ladder</H1>"
 
+  form = cgi.FieldStorage()
+
+  #Check for a submission of a real game.
+  #TODO check that all these are present
+  if form.has_key("redplayer"):
+    from time import time
+    with open("ladder.txt", "a") as datafile:
+      datafile.write("\n%s %s %s %s %d.0" % (form['redplayer'].value, form['redscore'].value, form['blueplayer'].value, form['bluescore'].value, time()))
+    
+  #Check for a submission of a speculative game
   oldSpeculativeGames = []
 
-  form = cgi.FieldStorage()
   if form.has_key("oldSpeculativeGames"):
     oldSpeculativeGames = str(form['oldSpeculativeGames'].value).split(",")
 
@@ -21,10 +30,12 @@ def main():
   speculativeGames = oldSpeculativeGames
 
   #TODO check that all these are present
-  if form.has_key("redplayer"):
+  if form.has_key("specredplayer"):
     from time import time
-    speculativeGames.append("%s %s %s %s %s" % (form['redplayer'].value, form['redscore'].value, form['blueplayer'].value, form['bluescore'].value,time()))
-    
+    speculativeGames.append("%s %s %s %s %s" % (form['specredplayer'].value, form['specredscore'].value, form['specblueplayer'].value, form['specbluescore'].value,time()))
+  
+
+  #Parse the data and show the page
   ladderData = parseLadderFiles(speculativeGames)
 
   #mark all of the speculative games as such
@@ -49,10 +60,11 @@ def main():
   players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
 
   justPlayedList = form.getlist('justPlayed')
-  #TODO rewrite this if!
-  if len(justPlayedList) == 0:
-    if form.has_key("redplayer"):
-      justPlayedList = [form['redplayer'].value, form['blueplayer'].value]
+  if len(justPlayedList) == 0 and form.has_key("specredplayer"):
+    justPlayedList = [form['specredplayer'].value, form['specblueplayer'].value]
+
+  if len(justPlayedList) == 0 and form.has_key("redplayer"):
+    justPlayedList = [form['redplayer'].value, form['blueplayer'].value]
 
   for player in players:
     if player.name in justPlayedList:
@@ -113,10 +125,10 @@ def main():
   if len(speculativeGames) > 0:
     qs = cgi.parse_qs(os.environ["QUERY_STRING"])
     removeKey(qs, 'oldSpeculativeGames')
-    removeKey(qs, 'redplayer')
-    removeKey(qs, 'blueplayer')
-    removeKey(qs, 'redscore')
-    removeKey(qs, 'bluescore')
+    removeKey(qs, 'specredplayer')
+    removeKey(qs, 'specblueplayer')
+    removeKey(qs, 'specredscore')
+    removeKey(qs, 'specbluescore')
     
     print "<p class='speculativeGameRemoval'><a href='?%s'>remove Speculative Games</a></p>" % urllib.urlencode(qs, True)
 
@@ -125,7 +137,7 @@ def main():
 
   #add a real game
   print """<tr><td>
-    <form method="GET" action="ladderEdit.cgi">
+    <form method="POST" action="">
       <h3>Add a game:</h3>
       <table>
         <tr>
@@ -159,13 +171,13 @@ def main():
         </tr>
         <tr>
           <th class='redHeader'>Red Player</th>
-          <td><input type="text" name="redplayer" value=""/></td>
-          <td><input type="text" name="redscore" value=""/></td>
+          <td><input type="text" name="specredplayer" value=""/></td>
+          <td><input type="text" name="specredscore" value=""/></td>
         </tr>
         <tr>
           <th class='blueHeader'>Blue Player</th>
-          <td><input type="text" name="blueplayer" value=""/></td>
-          <td><input type="text" name="bluescore" value=""/></td>
+          <td><input type="text" name="specblueplayer" value=""/></td>
+          <td><input type="text" name="specbluescore" value=""/></td>
         </tr>
       </table>
       <input type="hidden" name="oldSpeculativeGames" value="%s" />
