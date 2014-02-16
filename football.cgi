@@ -8,9 +8,6 @@ from htmlCore import *
 import urllib
 
 def main():
-  printHTMLHeader()
-  print "<H1>The Table Football Ladder</H1>"
-
   form = cgi.FieldStorage()
 
   #Check for a submission of a real game.
@@ -19,7 +16,7 @@ def main():
     from time import time
     with open("ladder.txt", "a") as datafile:
       datafile.write("\n%s %s %s %s %d.0" % (form['redplayer'].value, form['redscore'].value, form['blueplayer'].value, form['bluescore'].value, time()))
-    
+
   #Check for a submission of a speculative game
   oldSpeculativeGames = []
 
@@ -46,6 +43,29 @@ def main():
   #setup all the objects which can give us statistics for a player
   from playerstats import Totals, Skill
   playerstats = Totals(ladderData.games), Skill(ladderData.games)
+
+  if form.has_key("redplayer") and form.has_key("jsonResponse"):
+    # Put out a json response if we have just submitted a game and it was specifically requested.
+    lastGame = ladderData.games[-1]
+    printJSONHeader()
+    print """
+{
+  "red" : {
+    "name" : "%(redName)s",
+    "score" : %(redScore)s,
+    "skillChange" : %(redSkillChange)s
+  },
+  "blue" : {
+    "name" : "%(blueName)s",
+    "score" : %(blueScore)s,
+    "skillChange" : %(blueSkillChange)s
+  }
+}""" % {"redName":lastGame.red, "redScore":lastGame.redScore, "redSkillChange":lastGame.getVar(lastGame.red, "skillChangeTo"), "blueName":lastGame.blue, "blueScore":lastGame.blueScore, "blueSkillChange":lastGame.getVar(lastGame.blue, "skillChangeTo")}
+    return
+        
+
+  printHTMLHeader()
+  print "<H1>The Table Football Ladder</H1>"
 
   #main table
   print "<form action=\"graphpage.cgi\" method=\"GET\">"
@@ -157,6 +177,7 @@ def main():
         </tr>
       </table>
       <input type="hidden" name="oldSpeculativeGames" value="%s" />
+      <!--<input type="hidden" name="jsonResponse" value="s" />-->
       <input type="submit" value="Submit"/>
     </form>
     </td>

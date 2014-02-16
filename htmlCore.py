@@ -3,6 +3,9 @@ import cgi
 import urllib
 import os
 
+def printJSONHeader():
+  print "Content-Type: application/json\n\n";
+
 def printHTMLHeader(title=""):
   if title != "":
     title = title + " - "
