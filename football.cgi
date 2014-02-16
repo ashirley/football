@@ -76,7 +76,7 @@ def main():
   print "</tr>"
 
   #data rows
-  players = ladderData.getAllPlayers()[:]
+  players = ladderData.getAllUnexcludedPlayers()
   players.sort(lambda x, y: cmp(y.getLastGame().getVar(y.name, "newSkill"), x.getLastGame().getVar(x.name, "newSkill")))
 
   justPlayedList = form.getlist('justPlayed')
@@ -225,7 +225,6 @@ def main():
   print "</table>"
 
   #most significant ever.
-
   mostSignificantChange = 0.0
   for game in ladderData.games:
     

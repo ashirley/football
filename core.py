@@ -1,28 +1,24 @@
 import datetime
 
 def parseLadderFiles(others = []):
-  def contains(list, string):
-    return (string in list) or (string + "\n" in list)
-
   #open the excluded file:
   excludedFile=open('ladderExclude', 'r');
   
   excluded = [];
   
   for line in excludedFile:
-    excluded.append(line);
+    excluded.append(line.strip());
   
   #open the ladder:
   file=open('ladder.txt', 'r');
 
-  ladderData = LadderData();
+  ladderData = LadderData(excluded);
 
   for line in file.readlines() + others:
     list = line.split();
     if len(list) == 5:
-      if not (contains(excluded, list[0]) or contains(excluded, list[2])):
-          game  = Game(list[0],list[2],list[1],list[3], list[4]);
-          ladderData.addGame(game);
+      game  = Game(list[0],list[2],list[1],list[3], list[4]);
+      ladderData.addGame(game);
   return ladderData
 
 class Game:
@@ -163,8 +159,9 @@ class Player:
 
 class LadderData:
 
-  def __init__(self):
-    self._players = {} 
+  def __init__(self, excluded):
+    self._excludedPlayers = excluded
+    self._players = {}
     self.games = []
     self.vars = {}
 
@@ -180,14 +177,17 @@ class LadderData:
       if create:
         newPlayer = Player(name)
         self._players[name] = newPlayer
-	return newPlayer
+        return newPlayer
       else:
         return None
     else:
       return self._players[name] 
 
+  def getAllUnexcludedPlayers(self):
+    return [player for player in self._players.values() if player.name not in self._excludedPlayers]
+
   def getAllPlayers(self):
-    return self._players.values()
+    return self._players.values()[:]
 
   def addGame(self, game):
     red = self.getPlayer(game.red, True)
