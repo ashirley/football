@@ -10,7 +10,7 @@ import urllib
 def main():
   form = cgi.FieldStorage()
   printHTMLHeader()
-  #print "<H1>Quick add a game</H1>" this screws with <table height='100%'
+  #print "<h1>Quick add a game</h1>" this screws with <table height='100%'
 
   ladderData = parseLadderFiles([])
   players = ladderData.getAllPlayers()[:]
@@ -42,7 +42,7 @@ def main():
   else :
     buttons = generatePlayerButtons(players, 'player1')
 
-  print "<form action='' method='GET'>"
+  print "<form action='' method='get'>"
   showSquareTable(buttons)
   print hidden
   print "</form>"

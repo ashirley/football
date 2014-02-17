@@ -9,12 +9,12 @@ def printJSONHeader():
 def printHTMLHeader(title=""):
   if title != "":
     title = title + " - "
-
   print "Content-Type: text/html\n\n";
-  print """
+  print """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>%sTable Football Ladder (v2 beta)</title>
-  <script src="js/sorttable.js"></script>
+  <script src="js/sorttable.js" type="script/javascript"></script>
   <link rel="stylesheet" type="text/css" href="football.css" />
 </head>
                                                          
@@ -25,7 +25,7 @@ def printHTMLFooter():
   print """
   <hr/>
   <!-- I bloody hate CSS why is this so hard? -->
-  <table class="structural" width="100%"><tr><td align="left">&copy;2007 <a href="mailto:aks@decisionsoft.co.uk">Andrew Shirley</a></td><td id="devLink">Try the development branch at <a href="http://www.dsl.local/~aks/football-dev/football.cgi">http://www.dsl.local/~aks/football-dev/football.cgi</a></td></tr></table><p>
+  <table class="structural" width="100%"><tr><td align="left">&copy;2007 <a href="mailto:aks@decisionsoft.co.uk">Andrew Shirley</a></td><td id="devLink">Try the development branch at <a href="http://www.dsl.local/~aks/football-dev/football.cgi">http://www.dsl.local/~aks/football-dev/football.cgi</a></td></tr></table>
   <hr/>
   </body>
 </html>
@@ -47,7 +47,7 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
   if gameListStart < 0:
     gameListStart = 0
 
-  print "<a name='%s'><h3>%s</h3><table>" %(anchorName, headerName)
+  print "<h3><a id='%s'></a>%s</h3><table>" %(anchorName, headerName)
   print Game.tableHeadings()
 
   if len(games) < 10:

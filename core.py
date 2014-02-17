@@ -61,12 +61,13 @@ class Game:
 
   def tableHeadings():
     out = """
+<tr>
 <th class='redHeader'>Red player</th>
 <th class='redHeader'>Red Score</th>
 <th class='blueHeader'>Blue Score</th>
 <th class='blueHeader'>Blue Player</th>
 <th>Skill Change</th>
-<th>Date</th>"""
+<th>Date</th></tr>"""
       
     return out
   tableHeadings = staticmethod(tableHeadings)

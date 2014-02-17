@@ -25,7 +25,7 @@ def main():
     return
 
   printHTMLHeader("Player " + name)
-  print "<H1>The Table Football Ladder for %s</H1>" % name
+  print "<h1>The Table Football Ladder for %s</h1>" % name
 
   #setup all the objects which can give us statistics for a player (This needs to be here so we calculate the skill for the recent games.
   from playerstats import Totals, Skill
