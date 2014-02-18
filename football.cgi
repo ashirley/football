@@ -15,7 +15,7 @@ def main():
   if form.has_key("redplayer"):
     from time import time
     with open("ladder.txt", "a") as datafile:
-      datafile.write("\n%s %s %s %s %d.0" % (form['redplayer'].value, form['redscore'].value, form['blueplayer'].value, form['bluescore'].value, time()))
+      datafile.write("\n%s %s %s %s %.0f" % (form['redplayer'].value, form['redscore'].value, form['blueplayer'].value, form['bluescore'].value, time()))
 
   #Check for a submission of a speculative game
   oldSpeculativeGames = []
