@@ -74,11 +74,11 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
     gamesLeft = len(games) - 10 - gameListStart
     if gamesLeft > 10:
       qsDict[gameListStartParamName] = gameListStart + 10
-      print "  <a href='?%s#%s'>Prev</a>" % (urllib.urlencode(qsDict, True), anchorName)
+      print "  <a href='?%s#%s'>Prev</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
     elif gamesLeft > 0:
       # we aren't at the start but we shouldn't go back a full 10.
       qsDict[gameListStartParamName] = len(games) - 10
-      print "  <a href='?%s#%s'>Prev</a>" % (urllib.urlencode(qsDict, True), anchorName)
+      print "  <a href='?%s#%s'>Prev</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
     else:
       # there is none left.
       print "Prev"
@@ -93,12 +93,12 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
           if i < len(games):
             #but only just, put a link to the very end.
             qsDict[gameListStartParamName] = len(games) - 10
-            print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urllib.urlencode(qsDict, True), anchorName)
+            print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
           continue
         else:
           #we can go back farther
           qsDict[gameListStartParamName] = i
-          print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urllib.urlencode(qsDict, True), anchorName)
+          print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
     
     #the current o
     print "<span class='navNumCur'>o</span>"
@@ -109,24 +109,28 @@ def showGameList(games, anchorName="RecentGames", headerName="Recent Games", gam
         if i <= 0:
           #this is as far forward as we can go.
           qsDict[gameListStartParamName] = 0
-          print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urllib.urlencode(qsDict, True), anchorName)
+          print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
           break
         else:
           #we can go forward farther
           qsDict[gameListStartParamName] = i
-          print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urllib.urlencode(qsDict, True), anchorName)
+          print "  <a href='?%s#%s' class='navNumFuture'>o</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
     print "<span class='navNumInert'>tball</span>"
   
     if gameListStart > 10:
       qsDict[gameListStartParamName] = gameListStart - 10
-      print "<a href='?%s#%s'>Next</a>" % (urllib.urlencode(qsDict, True), anchorName)
+      print "<a href='?%s#%s'>Next</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
     elif gameListStart > 0:
       # we aren't at the end but we shouldn't go forward a full 10.
       qsDict[gameListStartParamName] = 0
-      print "<a href='?%s#%s'>Next</a>" % (urllib.urlencode(qsDict, True), anchorName)
+      print "<a href='?%s#%s'>Next</a>" % (urlencodeXHTML(qsDict, gameListStartParamName), anchorName)
     else:
       # there is none left.
       print "Next"
+
+#The existing urlencode spat ampersands everywhere which fails XHTML validation
+def urlencodeXHTML(qsDict, gameListStartParamName):
+    return "name=" + qsDict["name"][0] + "&amp;" + gameListStartParamName + "=" + str(qsDict[gameListStartParamName])
 
 def showSquareTable(data):
   """
