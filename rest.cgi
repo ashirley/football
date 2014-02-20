@@ -46,6 +46,8 @@ def main():
           # highest and lowest ever skill.
           highestSkill = 0.0
           lowestSkill = 0.0
+          
+          print "{"
         
           for game in ladderData.games:
             blueSkill = game.getVar(game.blue, "newSkill")
@@ -67,26 +69,26 @@ def main():
               lowestSkill = redSkill
               lowestSkillPlayer = game.red
               lowestSkillTime = game.time
-              
-                # most significant ever.
-              mostSignificantChange = 0.0
-              for game in ladderData.games:
-                
-                changeToBlue = game.getVar(game.blue, "skillChangeTo") 
-                if changeToBlue > mostSignificantChange:
-                  mostSignificantChange = changeToBlue
-                  mostSignificantGame = game
+          print "\"highestSkill\":{\"name\":\"%(name)s\", \"skill\":%(skill)s, \"date\":%(date)s}," % { "name": highestSkillPlayer, "skill": highestSkill, "date": highestSkillTime}
+          print "\"lowestSkill\":{\"name\":\"%(name)s\", \"skill\":%(skill)s, \"date\":%(date)s}" % { "name": lowestSkillPlayer, "skill": lowestSkill, "date": lowestSkillTime}
+          print "\"mostSignificantGame\":"
+            # most significant ever.
+          mostSignificantChange = 0.0
+          for game in ladderData.games:
             
-                changeToRed = game.getVar(game.red, "skillChangeTo") 
-                if changeToRed > mostSignificantChange:
-                  mostSignificantChange = changeToRed
-                  mostSignificantGame = game
+            changeToBlue = game.getVar(game.blue, "skillChangeTo") 
+            if changeToBlue > mostSignificantChange:
+              mostSignificantChange = changeToBlue
+              mostSignificantGame = game
+        
+            changeToRed = game.getVar(game.red, "skillChangeTo") 
+            if changeToRed > mostSignificantChange:
+              mostSignificantChange = changeToRed
+              mostSignificantGame = game
+          gameToJson(mostSignificantGame)
+          print "}"
             
-              print "<h3>Most Significant ever</h3>"
-              print "<table>"
-              print Game.tableHeadings()
-              print "<tr class='%s'>" % mostSignificantGame.tableClass(), mostSignificantGame.toTableRow(), "</tr>"
-              print "</table>"
+        
 
       elif form['mode'].value == "recent":
           # 10 most recent games
@@ -129,8 +131,5 @@ def gameToJson(game):
   "date" : %(date)s
 }""" % {"redName":game.red, "redScore":game.redScore, "redSkillChange":game.getVar(game.red, "skillChangeTo"), "blueName":game.blue, "blueScore":game.blueScore, "blueSkillChange":game.getVar(game.blue, "skillChangeTo"), "date":game.time}
 
-
-def removeKey(dict, key):
-  if key in dict: del dict[key]
 
 main()
