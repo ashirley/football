@@ -89,24 +89,45 @@ def main():
               print "</table>"
 
       elif form['mode'].value == "recent":
-          # recent games
-          print "<tr><td>"
-          showGameList(ladderData.games)
-          print "</td><td>"
-      elif form['mode'] == "recentSignificant":
+          # 10 most recent games
+          print "["
+          gamesToList = ladderData.games[-10:]
+          gamesToList.reverse()
+          for i in range(len(gamesToList)):
+              gameToJson(gamesToList[i])
+              if i < len(gamesToList) - 1:
+                  print ","
+          print "]"
+              
+      elif form['mode'].value == "recentSignificant":
           # recent significant games
-          showGameList(
-            [game for game in ladderData.games if game.isSignificant()],
-            anchorName="RecentSignificantGames",
-            headerName="Recent Significant Games",
-            gameListStartParamName="significantGameListStart"
-          )
-          print "</td></tr>"
-        
-          print "</table>"
+          sigGames = [game for game in ladderData.games if game.isSignificant()]
+          print "["
+          gamesToList = sigGames[-10:]
+          gamesToList.reverse()
+          for i in range(len(gamesToList)):
+              gameToJson(gamesToList[i])
+              if i < len(gamesToList) - 1:
+                  print ","
+          print "]"
 
 
 
+def gameToJson(game):
+    print """
+{
+  "red" : {
+    "name" : "%(redName)s",
+    "score" : %(redScore)s,
+    "skillChange" : %(redSkillChange)s
+  },
+  "blue" : {
+    "name" : "%(blueName)s",
+    "score" : %(blueScore)s,
+    "skillChange" : %(blueSkillChange)s
+  },
+  "date" : %(date)s
+}""" % {"redName":game.red, "redScore":game.redScore, "redSkillChange":game.getVar(game.red, "skillChangeTo"), "blueName":game.blue, "blueScore":game.blueScore, "blueSkillChange":game.getVar(game.blue, "skillChangeTo"), "date":game.time}
 
 
 def removeKey(dict, key):
