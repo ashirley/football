@@ -25,7 +25,8 @@ def main():
   if form.has_key("mode"):
       if form['mode'].value == "ladder":
           print "["
-          for player in players:
+          for i in range(len(players)):
+            player = players[i]
             print "{ \"name\":\"" + player.name + "\"," 
             
             totals = playerstats[0]
@@ -39,7 +40,9 @@ def main():
             print "\"weaselFactor\":" + str(skill.weasel[player.name]) + ","
             # TODO overrated (but there's lots of logic for this inside Skill)
             
-            print "},"
+            print "}"
+            if i < len(players) - 1:
+                print ","
           print "]"
 
       elif form['mode'].value == "records":
