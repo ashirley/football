@@ -4,7 +4,7 @@ import cgitb; cgitb.enable()
 from copy import deepcopy
 
 import os
-os.environ["HOME"] = "/home/local/aks/public_html/football/matplotlibhome"
+os.environ["HOME"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "matplotlibhome")
 
 from core import *
 

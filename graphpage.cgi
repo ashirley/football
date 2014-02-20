@@ -17,7 +17,7 @@ def main():
     
   print "<img src='graph.cgi?%s' />" % urllib.urlencode(qsDict, True)
 
-  print "<form method='GET'>"
+  print "<form method='get'>"
 
   #name
 

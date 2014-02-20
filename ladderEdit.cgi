@@ -70,7 +70,7 @@ else {
     print FILE "\n$player1 $player1score $player2 $player2score " . time();
     close(FILE);
     
-    print "<html><head><meta http-equiv=\"refresh\" content=\"0;URL=football.cgi?justPlayed=$player1&justPlayed=$player2\"/></head></html>\n";
+    print "<html><head><meta http-equiv=\"refresh\" content=\"0;URL=football.cgi?justPlayed=$player1&amp;justPlayed=$player2\"/></head></html>\n";
 }
 
 

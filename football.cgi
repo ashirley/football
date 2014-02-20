@@ -65,10 +65,10 @@ def main():
         
 
   printHTMLHeader()
-  print "<H1>The Table Football Ladder</H1>"
+  print "<h1>The Table Football Ladder</h1>"
 
   #main table
-  print "<form action=\"graphpage.cgi\" method=\"GET\">"
+  print "<form action=\"graphpage.cgi\" method=\"get\">"
   print "<table class=\"sortable\" id=\"players\">"
   print "<tr>", Player.tableHeadings()
   for stat in playerstats:
@@ -97,7 +97,7 @@ def main():
         print stat.toTableRow(player)
     print "</tr>"
     
-  print "<tr class='sortbottom'><td class='structural'/><td class='structural'><input type=\"submit\" value=\"Graph\" /></td>"
+  print "<tr class='sortbottom'><td class='structural'/><td class='structural'><input type=\"submit\" value=\"Graph\" /></td></tr>"
   print "</table>"
   print "</form>"
 
@@ -157,7 +157,7 @@ def main():
 
   #add a real game
   print """<tr><td>
-    <form method="POST" action="">
+    <form method="post" action="">
       <h3>Add a game:</h3>
       <table>
         <tr>
@@ -182,7 +182,7 @@ def main():
     </form>
     </td>
     <td>
-    <form method="GET" action="" class="speculativeGameEntry">
+    <form method="get" action="" class="speculativeGameEntry">
       <h3>Add a Speculative game:</h3>
       <table>
         <tr>
