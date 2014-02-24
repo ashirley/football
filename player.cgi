@@ -35,7 +35,7 @@ def main():
   showGameList(player.games)
 
   print "<h2>Graph</h2>"
-  print "<a href='graphpage.cgi?name=%s'><img src='graph.cgi?name=%s' alt='%s graph'/></a>" % (name, name)
+  print "<a href='graphpage.cgi?name=%s'><img src='graph.cgi?name=%s' alt='%s graph'/></a>" % (name, name, name)
   
   print "<h2>Per-player Stats</h2>"
 
