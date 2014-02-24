@@ -14,7 +14,7 @@ def printHTMLHeader(title=""):
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>%sTable Football Ladder (v2 beta)</title>
-  <script src="js/sorttable.js" type="script/javascript"></script>
+  <script src="js/sorttable.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="football.css" />
 </head>
                                                          
