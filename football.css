@@ -46,6 +46,10 @@ td.structural {
   text-align: right;
 }
 
+#devLink p {
+  margin: 0.2em
+}
+
 .redHeader {
   background-color: pink;
 }
