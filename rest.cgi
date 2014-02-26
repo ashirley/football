@@ -37,7 +37,7 @@ def main():
             skill = playerstats[1]
             
             print "\"skill\":" + str(skill.skill[player.name].lastSkill()) + ","
-            print "\"weaselFactor\":" + str(skill.weasel[player.name]) + ","
+            print "\"weaselFactor\":" + str(skill.weasel[player.name])  # + ","
             # TODO overrated (but there's lots of logic for this inside Skill)
             
             print "}"
