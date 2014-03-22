@@ -4,6 +4,8 @@ import cgitb; cgitb.enable()
 
 from core import *
 from htmlCore import *
+from playerstats import Totals, Skill
+from copy import deepcopy
 
 import urllib
 
@@ -15,7 +17,6 @@ def main():
   ladderData = parseLadderFiles()
 
   # setup all the objects which can give us statistics for a player
-  from playerstats import Totals, Skill
   playerstats = Totals(ladderData.games), Skill(ladderData.games)
         
 
@@ -115,6 +116,31 @@ def main():
               if i < len(gamesToList) - 1:
                   print ","
           print "]"
+          
+      elif form['mode'].value == "playerHistory":
+          form = cgi.FieldStorage()
+          if form.has_key("name"):
+              usernames = form.getlist('name')
+          else:
+              usernames = []
+
+          plotData = DefaultDict([])
+          Skill(ladderData.games)
+            
+          for game in ladderData.games:
+              plotData[game.red].append((game.time, game.getVar(game.red, "oldSkill") + game.getVar(game.red, "skillChangeTo")))
+              plotData[game.blue].append((game.time, game.getVar(game.blue, "oldSkill") + game.getVar(game.blue, "skillChangeTo")))
+          
+          for u in range(len(usernames)):
+              user = usernames[u]
+              print """"%(name)s":{""" % {"name": user}
+              userSkill = plotData[user]
+              for i in range(len(userSkill)):
+                  print """{"date":%(date)s, "skill":%(skill)s}%(maybeComma)s""" % {"date":userSkill[i][0], "skill": userSkill[i][1], "maybeComma": "," if i < (len(userSkill) - 1) else ""}
+              if i < len(userSkill) - 1:
+                  print "},"
+              else:
+                  print "}"
 
 
 
@@ -134,5 +160,21 @@ def gameToJson(game):
   "date" : %(date)s
 }""" % {"redName":game.red, "redScore":game.redScore, "redSkillChange":game.getVar(game.red, "skillChangeTo"), "blueName":game.blue, "blueScore":game.blueScore, "blueSkillChange":game.getVar(game.blue, "skillChangeTo"), "date":game.time}
 
+
+
+
+class DefaultDict(dict):
+    """Dictionary with a default value for unknown keys."""
+    def __init__(self, default):
+        self.default = default
+
+    def __getitem__(self, key):
+        if key in self: return self.get(key)
+        return self.setdefault(key, deepcopy(self.default))
+    
+    def __copy__(self):
+        copy = DefaultDict(self.default)
+        copy.update(self)
+        return copy
 
 main()
