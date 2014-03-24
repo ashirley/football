@@ -133,14 +133,14 @@ def main():
 
             for u in range(len(usernames)):
                 user = usernames[u]
-                print """"%(name)s":{""" % {"name": user}
+                print """"%(name)s":[""" % {"name": user}
                 userSkill = plotData[user]
                 for i in range(len(userSkill)):
                     print """{"date":%(date)s, "skill":%(skill)s}%(maybeComma)s""" % {"date": userSkill[i][0], "skill": userSkill[i][1], "maybeComma": "," if i < (len(userSkill) - 1) else ""}
                 if i < len(userSkill) - 1:
-                    print "},"
+                    print "],"
                 else:
-                    print "}"
+                    print "]"
 
 
 def gameToJson(game):
